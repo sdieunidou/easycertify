@@ -55,13 +55,21 @@ export function MarkAsReadDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-          <AlertDialogCancel
-            onClick={onSkip}
+          <AlertDialogCancel className="gap-2">
+            Annuler
+          </AlertDialogCancel>
+          
+          <Button
+            onClick={() => {
+              onOpenChange(false);
+              onSkip();
+            }}
+            variant="outline"
             className="gap-2"
           >
             <SkipForward className="h-4 w-4" />
-            Passer
-          </AlertDialogCancel>
+            Passer sans marquer
+          </Button>
           
           {showQuizOption && onDoQuiz && (
             <Button
