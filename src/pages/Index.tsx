@@ -499,7 +499,8 @@ const Index = () => {
           categoryTitle={currentTopicData.category.title}
           certificationName={currentTopicData.certification.name}
           onNavigate={(dir) => {
-            performNavigation(dir);
+            setFocusModeOpen(false);
+            handleNavigate(dir);
           }}
           hasPrev={currentTopicIndex > 0}
           hasNext={currentTopicIndex < allTopics.length - 1}
