@@ -23,14 +23,14 @@ export function CodeBlock({ children, className, inline }: CodeBlockProps) {
 
   if (inline) {
     return (
-      <code className="px-1.5 py-0.5 rounded text-sm font-medium bg-code-bg border border-code-border text-primary font-mono">
+      <code className="px-1.5 py-0.5 rounded text-sm font-medium bg-code-bg border border-code-border text-primary font-mono break-all">
         {children}
       </code>
     );
   }
 
   return (
-    <div className="relative group my-4">
+    <div className="relative group my-4 max-w-full overflow-x-auto">
       <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <button
           onClick={handleCopy}
@@ -61,12 +61,15 @@ export function CodeBlock({ children, className, inline }: CodeBlockProps) {
           borderRadius: '0.75rem',
           fontSize: '0.875rem',
           lineHeight: '1.6',
+          maxWidth: '100%',
+          overflowX: 'auto',
         }}
         codeTagProps={{
           style: {
             fontFamily: "'JetBrains Mono', monospace",
           }
         }}
+        wrapLongLines={false}
       >
         {children.trim()}
       </SyntaxHighlighter>

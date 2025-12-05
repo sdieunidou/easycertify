@@ -171,8 +171,8 @@ export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>
       </header>
 
       {/* Content */}
-      <ScrollArea ref={scrollRef} className="flex-1 min-h-0">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 overflow-hidden">
+      <ScrollArea ref={scrollRef} className="flex-1 min-h-0 w-full">
+        <div className="max-w-full w-full px-4 sm:px-6 py-6 sm:py-8 overflow-x-hidden">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -193,7 +193,7 @@ export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>
             </div>
           ) : (
             <>
-              <article className="markdown-content animate-fade-in overflow-x-hidden break-words">
+              <article className="markdown-content animate-fade-in overflow-x-hidden break-words max-w-full lg:max-w-4xl lg:mx-auto">
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{

@@ -192,10 +192,11 @@
 }
 
 .markdown-content code:not(pre code) {
-  @apply px-1.5 py-0.5 rounded text-sm font-medium;
+  @apply px-1.5 py-0.5 rounded text-sm font-medium break-all;
   background: hsl(var(--code-bg));
   border: 1px solid hsl(var(--code-border));
   color: hsl(var(--primary));
+  word-break: break-all;
 }
 
 .markdown-content pre {
