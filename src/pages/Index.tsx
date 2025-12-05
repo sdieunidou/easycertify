@@ -77,10 +77,7 @@ const Index = () => {
 
   const { addResult } = useExamHistory();
 
-  // Keep focusModeRef in sync with focusModeOpen state
-  useEffect(() => {
-    focusModeRef.current = focusModeOpen;
-  }, [focusModeOpen]);
+  // Initialize from URL params
   useEffect(() => {
     if (certificationId) {
       const cert = certifications.find(c => c.id === certificationId);
@@ -185,25 +182,43 @@ const Index = () => {
       // Show dialog if not completed OR if there's an incomplete quiz
       if (!isCompleted(topicFullId) || (currentHasQuiz && !currentQuizCompleted)) {
         setPendingNavigation(direction);
+        // Save current focus mode state before closing
+        const wasInFocusMode = focusModeOpen;
+        // Temporarily close focus mode to show modal
+        if (wasInFocusMode) {
+          focusModeRef.current = true; // Keep ref true for restoration
+          setFocusModeOpen(false);
+        }
         setShowMarkAsReadDialog(true);
         return;
       }
     }
     performNavigation(direction);
-  }, [selectedTopic, isCompleted, performNavigation, currentHasQuiz, currentQuizCompleted]);
+  }, [selectedTopic, isCompleted, performNavigation, currentHasQuiz, currentQuizCompleted, focusModeOpen]);
 
   const handleQuizStateChange = useCallback((hasQuiz: boolean, quizCompleted: boolean) => {
     setCurrentHasQuiz(hasQuiz);
     setCurrentQuizCompleted(quizCompleted);
   }, []);
 
-  const handleDoQuiz = useCallback(() => {
+  // Helper to open focus mode (updates both state and ref)
+  const openFocusMode = useCallback(() => {
+    focusModeRef.current = true;
+    setFocusModeOpen(true);
+  }, []);
+
+  // Helper to close focus mode (updates both state and ref)
+  const closeFocusMode = useCallback(() => {
     focusModeRef.current = false;
-    setFocusModeOpen(false); // Close focus mode to show quiz
+    setFocusModeOpen(false);
+  }, []);
+
+  const handleDoQuiz = useCallback(() => {
+    closeFocusMode();
     contentViewerRef.current?.scrollToQuiz();
     setShowMarkAsReadDialog(false);
     setPendingNavigation(null);
-  }, []);
+  }, [closeFocusMode]);
 
   const handleMarkAsReadAndNavigate = useCallback(() => {
     const wasFocusModeOpen = focusModeRef.current;
@@ -216,9 +231,9 @@ const Index = () => {
     setPendingNavigation(null);
     // Restore focus mode if it was open
     if (wasFocusModeOpen) {
-      setTimeout(() => setFocusModeOpen(true), 100);
+      setTimeout(() => openFocusMode(), 100);
     }
-  }, [selectedTopic, pendingNavigation, toggleCompleted, performNavigation]);
+  }, [selectedTopic, pendingNavigation, toggleCompleted, performNavigation, openFocusMode]);
 
   const handleSkipNavigation = useCallback(() => {
     const wasFocusModeOpen = focusModeRef.current;
@@ -229,9 +244,9 @@ const Index = () => {
     setPendingNavigation(null);
     // Restore focus mode if it was open
     if (wasFocusModeOpen) {
-      setTimeout(() => setFocusModeOpen(true), 100);
+      setTimeout(() => openFocusMode(), 100);
     }
-  }, [pendingNavigation, performNavigation]);
+  }, [pendingNavigation, performNavigation, openFocusMode]);
 
   // Get current topic details
   const currentTopicData = useMemo(() => {
@@ -257,7 +272,7 @@ const Index = () => {
       } else if (e.key === 'f' || e.key === 'F') {
         if (currentTopicData) {
           e.preventDefault();
-          setFocusModeOpen(true);
+          openFocusMode();
         }
       }
     };
@@ -458,7 +473,7 @@ const Index = () => {
                 onUseFreeze={useFreeze}
                 activityHistory={activityHistory}
               />
-              <FocusModeButton onClick={() => setFocusModeOpen(true)} />
+              <FocusModeButton onClick={openFocusMode} />
               <PrintButton
                 title={currentTopicData.topic.title}
                 categoryTitle={currentTopicData.category.title}
@@ -510,15 +525,12 @@ const Index = () => {
       {currentTopicData && (
         <FocusMode
           isOpen={focusModeOpen}
-          onClose={() => setFocusModeOpen(false)}
+          onClose={closeFocusMode}
           content={focusModeContent}
           title={currentTopicData.topic.title}
           categoryTitle={currentTopicData.category.title}
           certificationName={currentTopicData.certification.name}
-          onNavigate={(dir) => {
-            setFocusModeOpen(false);
-            handleNavigate(dir);
-          }}
+          onNavigate={handleNavigate}
           hasPrev={currentTopicIndex > 0}
           hasNext={currentTopicIndex < allTopics.length - 1}
         />
