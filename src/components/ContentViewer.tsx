@@ -41,30 +41,30 @@ export function ContentViewer({
   const githubUrl = `https://github.com/sdieunidou/${certification.id}-certification/blob/main/${category.folder}/${topic.path}`;
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-background">
+    <div className="flex-1 flex flex-col h-full bg-background min-h-0">
       {/* Header */}
-      <header className="border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <header className="border-b border-border px-4 sm:px-6 py-3 sm:py-4 shrink-0">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
               <span className={cn(
-                "px-2 py-0.5 rounded text-xs font-medium",
+                "px-2 py-0.5 rounded text-xs font-medium shrink-0",
                 certification.color === 'symfony' 
                   ? "bg-foreground text-background" 
                   : "bg-sylius text-white"
               )}>
                 {certification.name}
               </span>
-              <span>/</span>
-              <span>{category.title}</span>
+              <span className="hidden sm:inline">/</span>
+              <span className="hidden sm:inline truncate">{category.title}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <a
               href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <ExternalLink className="h-4 w-4" />
             </a>
@@ -73,7 +73,7 @@ export function ContentViewer({
               size="sm"
               onClick={onToggleFavorite}
               className={cn(
-                "transition-colors",
+                "transition-colors p-2",
                 isFavorite && "text-yellow-500"
               )}
             >
@@ -84,21 +84,21 @@ export function ContentViewer({
               size="sm"
               onClick={onToggleCompleted}
               className={cn(
-                "gap-2 transition-all",
+                "gap-1 sm:gap-2 transition-all text-xs sm:text-sm",
                 isCompleted && "bg-progress-complete hover:bg-progress-complete/90"
               )}
             >
               <Check className="h-4 w-4" />
-              {isCompleted ? 'Terminé' : 'Marquer comme lu'}
+              <span className="hidden sm:inline">{isCompleted ? 'Terminé' : 'Marquer comme lu'}</span>
             </Button>
           </div>
         </div>
-        <h1 className="text-2xl font-bold mt-3 text-foreground">{topic.title}</h1>
+        <h1 className="text-lg sm:text-2xl font-bold mt-2 sm:mt-3 text-foreground">{topic.title}</h1>
       </header>
 
       {/* Content */}
-      <ScrollArea className="flex-1">
-        <div className="max-w-4xl mx-auto px-6 py-8">
+      <ScrollArea className="flex-1 min-h-0">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -143,27 +143,29 @@ export function ContentViewer({
       </ScrollArea>
 
       {/* Navigation Footer */}
-      <footer className="border-t border-border px-6 py-4">
-        <div className="flex items-center justify-between">
+      <footer className="border-t border-border px-4 sm:px-6 py-3 sm:py-4 shrink-0">
+        <div className="flex items-center justify-between gap-2">
           <Button
             variant="outline"
             onClick={() => onNavigate('prev')}
             disabled={!hasPrev}
-            className="gap-2"
+            size="sm"
+            className="gap-1 sm:gap-2"
           >
             <ChevronLeft className="h-4 w-4" />
-            Précédent
+            <span className="hidden sm:inline">Précédent</span>
           </Button>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-xs sm:text-sm text-muted-foreground hidden md:block">
             Utilisez les flèches ← → pour naviguer
           </div>
           <Button
             variant="outline"
             onClick={() => onNavigate('next')}
             disabled={!hasNext}
-            className="gap-2"
+            size="sm"
+            className="gap-1 sm:gap-2"
           >
-            Suivant
+            <span className="hidden sm:inline">Suivant</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

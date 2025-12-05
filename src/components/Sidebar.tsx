@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap, Github } from 'lucide-react';
+import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap, Github, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Certification, Category, Topic } from '@/data/certificationData';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,8 @@ interface SidebarProps {
   isFavorite: (id: string) => boolean;
   completedCount: number;
   totalTopics: number;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export function Sidebar({
@@ -30,6 +32,8 @@ export function Sidebar({
   isFavorite,
   completedCount,
   totalTopics,
+  isOpen = true,
+  onClose,
 }: SidebarProps) {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,17 +66,42 @@ export function Sidebar({
 
   const progressPercent = totalTopics > 0 ? Math.round((completedCount / totalTopics) * 100) : 0;
 
+  const handleTopicClick = (certId: string, catId: string, topicId: string) => {
+    onSelectTopic(certId, catId, topicId);
+    onClose?.();
+  };
+
+  const handleGoHome = () => {
+    onGoHome();
+    onClose?.();
+  };
+
   return (
-    <aside className="w-80 border-r border-border bg-sidebar flex flex-col h-screen">
+    <aside className={cn(
+      "w-80 border-r border-border bg-sidebar flex flex-col h-screen",
+      "fixed lg:relative inset-y-0 left-0 z-50",
+      "transition-transform duration-300 ease-in-out",
+      isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+    )}>
       {/* Header */}
       <div className="p-4 border-b border-sidebar-border">
-        <button
-          onClick={onGoHome}
-          className="flex items-center gap-2 mb-2 hover:opacity-80 transition-opacity"
-        >
-          <GraduationCap className="h-6 w-6 text-primary" />
-          <span className="font-semibold text-lg text-sidebar-foreground">CertifPrep</span>
-        </button>
+        <div className="flex items-center justify-between mb-2">
+          <button
+            onClick={handleGoHome}
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <GraduationCap className="h-6 w-6 text-primary" />
+            <span className="font-semibold text-lg text-sidebar-foreground">CertifPrep</span>
+          </button>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-2 hover:bg-sidebar-accent rounded-lg transition-colors"
+            >
+              <X className="h-5 w-5 text-muted-foreground" />
+            </button>
+          )}
+        </div>
         <p className="text-[10px] text-muted-foreground leading-tight mb-4">
           Contenu généré par IA sans vérification humaine. Référez-vous à la documentation officielle.
         </p>
@@ -165,7 +194,7 @@ export function Sidebar({
                       return (
                         <button
                           key={topic.id}
-                          onClick={() => onSelectTopic(selectedCertification, category.id, topic.id)}
+                          onClick={() => handleTopicClick(selectedCertification, category.id, topic.id)}
                           className={cn(
                             "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all text-sm",
                             isSelected

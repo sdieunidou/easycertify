@@ -17,24 +17,24 @@ export function WelcomeScreen({
   totalCounts,
 }: WelcomeScreenProps) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 bg-background">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 bg-background overflow-auto">
       <div className="max-w-3xl w-full animate-fade-in">
         {/* Hero */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
-            <BookOpen className="h-8 w-8 text-primary" />
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/10 mb-4 sm:mb-6">
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold text-foreground mb-4">
+          <h1 className="text-2xl sm:text-4xl font-bold text-foreground mb-3 sm:mb-4">
             Bienvenue sur CertifPrep
           </h1>
-          <p className="text-lg text-muted-foreground max-w-lg mx-auto">
+          <p className="text-sm sm:text-lg text-muted-foreground max-w-lg mx-auto px-4">
             Préparez vos certifications Symfony et Sylius avec des fiches pédagogiques
             structurées et un suivi de progression.
           </p>
         </div>
 
         {/* Certification Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {certifications.map(cert => {
             const completed = completedCounts[cert.id] || 0;
             const total = totalCounts[cert.id] || 0;
@@ -43,10 +43,10 @@ export function WelcomeScreen({
             return (
               <Card
                 key={cert.id}
-                className="p-6 hover:border-primary/50 transition-all cursor-pointer group"
+                className="p-4 sm:p-6 hover:border-primary/50 transition-all cursor-pointer group"
                 onClick={() => onSelectFirstTopic(cert.id)}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
                   <div>
                     <span className={`inline-block px-2 py-1 rounded text-xs font-medium mb-2 ${
                       cert.color === 'symfony' 
@@ -55,13 +55,13 @@ export function WelcomeScreen({
                     }`}>
                       {cert.name} {cert.version}
                     </span>
-                    <h3 className="text-lg font-semibold text-foreground">
+                    <h3 className="text-base sm:text-lg font-semibold text-foreground">
                       Certification {cert.name}
                     </h3>
                   </div>
                   <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                   {cert.categories.length} catégories • {total} fiches
                 </p>
                 <div className="space-y-2">
@@ -82,8 +82,8 @@ export function WelcomeScreen({
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-3 gap-6">
-          <div className="text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          <div className="text-center p-4">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
               <Target className="h-5 w-5 text-primary" />
             </div>
@@ -92,7 +92,7 @@ export function WelcomeScreen({
               Marquez les fiches lues et suivez votre avancement
             </p>
           </div>
-          <div className="text-center">
+          <div className="text-center p-4">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
               <Star className="h-5 w-5 text-yellow-500" />
             </div>
@@ -101,7 +101,7 @@ export function WelcomeScreen({
               Ajoutez des fiches en favoris pour y revenir facilement
             </p>
           </div>
-          <div className="text-center">
+          <div className="text-center p-4">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
               <CheckCircle className="h-5 w-5 text-progress-complete" />
             </div>

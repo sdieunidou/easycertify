@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Menu } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { ContentViewer } from '@/components/ContentViewer';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { certifications, Certification, Category, Topic } from '@/data/certificationData';
 import { useProgress } from '@/hooks/useProgress';
+import { Button } from '@/components/ui/button';
 
 interface SelectedTopic {
   certificationId: string;
@@ -14,6 +16,7 @@ interface SelectedTopic {
 const Index = () => {
   const [selectedCertification, setSelectedCertification] = useState<string>('symfony');
   const [selectedTopic, setSelectedTopic] = useState<SelectedTopic | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const {
     completed,
@@ -129,6 +132,14 @@ const Index = () => {
 
   return (
     <div className="flex h-screen overflow-hidden dark">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       <Sidebar
         certifications={certifications}
         selectedCertification={selectedCertification}
@@ -143,30 +154,46 @@ const Index = () => {
         isFavorite={isFavorite}
         completedCount={currentCompleted}
         totalTopics={currentTotal}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
-      {currentTopicData ? (
-        <ContentViewer
-          certification={currentTopicData.certification}
-          category={currentTopicData.category}
-          topic={currentTopicData.topic}
-          topicFullId={topicFullId}
-          isCompleted={isCompleted(topicFullId)}
-          isFavorite={isFavorite(topicFullId)}
-          onToggleCompleted={() => toggleCompleted(topicFullId)}
-          onToggleFavorite={() => toggleFavorite(topicFullId)}
-          onNavigate={handleNavigate}
-          hasPrev={currentTopicIndex > 0}
-          hasNext={currentTopicIndex < allTopics.length - 1}
-        />
-      ) : (
-        <WelcomeScreen
-          certifications={certifications}
-          onSelectFirstTopic={handleSelectFirstTopic}
-          completedCounts={completedCounts}
-          totalCounts={totalCounts}
-        />
-      )}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Mobile header */}
+        <header className="lg:hidden flex items-center gap-3 p-4 border-b border-border bg-background">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <span className="font-semibold text-foreground">CertifPrep</span>
+        </header>
+
+        {currentTopicData ? (
+          <ContentViewer
+            certification={currentTopicData.certification}
+            category={currentTopicData.category}
+            topic={currentTopicData.topic}
+            topicFullId={topicFullId}
+            isCompleted={isCompleted(topicFullId)}
+            isFavorite={isFavorite(topicFullId)}
+            onToggleCompleted={() => toggleCompleted(topicFullId)}
+            onToggleFavorite={() => toggleFavorite(topicFullId)}
+            onNavigate={handleNavigate}
+            hasPrev={currentTopicIndex > 0}
+            hasNext={currentTopicIndex < allTopics.length - 1}
+          />
+        ) : (
+          <WelcomeScreen
+            certifications={certifications}
+            onSelectFirstTopic={handleSelectFirstTopic}
+            completedCounts={completedCounts}
+            totalCounts={totalCounts}
+          />
+        )}
+      </div>
     </div>
   );
 };
