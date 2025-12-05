@@ -74,6 +74,7 @@ export const certifications: Certification[] = [
         folder: '03-architecture-symfony',
         topics: [
           { id: 'flex', title: 'Symfony Flex', path: 'flex.md' },
+          { id: 'symfony-cli', title: 'Symfony CLI', path: 'cli.md' },
           { id: 'licence', title: 'Licence', path: 'licence.md' },
           { id: 'composants', title: 'Composants', path: 'composants.md' },
           { id: 'bridges', title: 'Bridges', path: 'bridges.md' },
