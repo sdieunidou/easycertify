@@ -253,7 +253,7 @@ const Index = () => {
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <span className="font-semibold text-foreground">CertifPrep</span>
+          <span className="font-semibold text-foreground">CertifyHub</span>
         </header>
 
         {currentTopicData ? (
