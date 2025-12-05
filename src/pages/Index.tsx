@@ -410,7 +410,7 @@ const Index = () => {
         <SEO path={location.pathname} />
       )}
 
-      <div className="flex h-screen overflow-hidden dark">
+      <div className="flex h-screen overflow-hidden dark w-full max-w-full">
       {/* Mobile overlay */}
       {sidebarOpen && selectedCertification && (
         <div 
@@ -437,7 +437,7 @@ const Index = () => {
         />
       )}
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden max-w-full">
         {/* Mobile header - only show when certification is selected */}
         {selectedCertification && (
           <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-background">
