@@ -26,8 +26,8 @@ export const certifications: Certification[] = [
   {
     id: 'symfony',
     name: 'Symfony',
-    version: '7.0',
-    description: 'Guide de révision pour la certification Symfony 7.0',
+    version: '7.0 / 7.4',
+    description: 'Guide de révision pour la certification Symfony 7.0 / 7.4',
     baseUrl: 'https://raw.githubusercontent.com/sdieunidou/symfony-certification/refs/heads/main/',
     color: 'symfony',
     categories: [
