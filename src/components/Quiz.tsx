@@ -36,7 +36,7 @@ export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
     if (hasSubmitted && cardRef.current) {
       setTimeout(() => {
         cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }, 100);
+      }, 400);
     }
   }, [hasSubmitted]);
 
