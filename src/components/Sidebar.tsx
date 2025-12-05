@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap } from 'lucide-react';
+import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Certification, Category, Topic } from '@/data/certificationData';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ interface SidebarProps {
   selectedTopic: string | null;
   onSelectCertification: (id: string) => void;
   onSelectTopic: (certId: string, catId: string, topicId: string) => void;
+  onGoHome: () => void;
   isCompleted: (id: string) => boolean;
   isFavorite: (id: string) => boolean;
   completedCount: number;
@@ -24,6 +25,7 @@ export function Sidebar({
   selectedTopic,
   onSelectCertification,
   onSelectTopic,
+  onGoHome,
   isCompleted,
   isFavorite,
   completedCount,
@@ -64,10 +66,16 @@ export function Sidebar({
     <aside className="w-80 border-r border-border bg-sidebar flex flex-col h-screen">
       {/* Header */}
       <div className="p-4 border-b border-sidebar-border">
-        <div className="flex items-center gap-2 mb-4">
+        <button
+          onClick={onGoHome}
+          className="flex items-center gap-2 mb-2 hover:opacity-80 transition-opacity"
+        >
           <GraduationCap className="h-6 w-6 text-primary" />
           <span className="font-semibold text-lg text-sidebar-foreground">CertifPrep</span>
-        </div>
+        </button>
+        <p className="text-[10px] text-muted-foreground leading-tight mb-4">
+          Contenu généré par IA sans vérification humaine. Référez-vous à la documentation officielle.
+        </p>
 
         {/* Certification Tabs */}
         <div className="flex gap-2 mb-4">
@@ -189,11 +197,20 @@ export function Sidebar({
       </ScrollArea>
 
       {/* Footer */}
-      <div className="p-4 border-t border-sidebar-border">
+      <div className="p-4 border-t border-sidebar-border space-y-2">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <BookOpen className="h-4 w-4" />
           <span>{currentCert?.name} {currentCert?.version}</span>
         </div>
+        <a
+          href={`https://github.com/sdieunidou/${currentCert?.id}-certification`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+        >
+          <Github className="h-4 w-4" />
+          <span>Voir le dépôt GitHub</span>
+        </a>
       </div>
     </aside>
   );

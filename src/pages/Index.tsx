@@ -138,6 +138,7 @@ const Index = () => {
           setSelectedTopic(null);
         }}
         onSelectTopic={handleSelectTopic}
+        onGoHome={() => setSelectedTopic(null)}
         isCompleted={isCompleted}
         isFavorite={isFavorite}
         completedCount={currentCompleted}
