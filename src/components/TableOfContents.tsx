@@ -6,7 +6,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
 interface Heading {
@@ -78,13 +77,13 @@ export function TableOfContents({ content, scrollContainer }: TableOfContentsPro
       </PopoverTrigger>
       <PopoverContent 
         align="end" 
-        className="w-72 p-0"
+        className="w-72 p-0 max-h-[70vh] flex flex-col"
         sideOffset={8}
       >
-        <div className="px-4 py-3 border-b border-border">
+        <div className="px-4 py-3 border-b border-border shrink-0">
           <h3 className="font-semibold text-sm">Plan de l'article</h3>
         </div>
-        <ScrollArea className="max-h-80">
+        <div className="overflow-y-auto flex-1 max-h-[60vh]">
           <nav className="p-2">
             {headings.map((heading, index) => (
               <button
@@ -101,7 +100,7 @@ export function TableOfContents({ content, scrollContainer }: TableOfContentsPro
               </button>
             ))}
           </nav>
-        </ScrollArea>
+        </div>
       </PopoverContent>
     </Popover>
   );
