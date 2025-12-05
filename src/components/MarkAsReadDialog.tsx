@@ -35,7 +35,7 @@ export function MarkAsReadDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-card border-border">
+      <AlertDialogContent className="bg-card border-border max-w-md">
         <button
           onClick={() => onOpenChange(false)}
           className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -47,15 +47,15 @@ export function MarkAsReadDialog({
           <AlertDialogTitle className="text-foreground pr-6">
             {showQuizOption ? "Quiz disponible !" : "Marquer comme lu ?"}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-muted-foreground">
+          <AlertDialogDescription className="text-muted-foreground break-words">
             {showQuizOption ? (
               <>
-                Un quiz est disponible pour "<span className="font-medium text-foreground">{topicTitle}</span>". 
-                Voulez-vous tester vos connaissances avant de continuer ?
+                Un quiz est disponible pour "<span className="font-medium text-foreground break-all">{topicTitle}</span>". 
+                Testez vos connaissances ?
               </>
             ) : (
               <>
-                Voulez-vous marquer "<span className="font-medium text-foreground">{topicTitle}</span>" comme lu avant de passer à la fiche suivante ?
+                Marquer "<span className="font-medium text-foreground break-all">{topicTitle}</span>" comme lu ?
               </>
             )}
           </AlertDialogDescription>
@@ -67,10 +67,10 @@ export function MarkAsReadDialog({
               onSkip();
             }}
             variant="outline"
-            className="gap-2"
+            className="gap-2 shrink-0"
           >
-            <SkipForward className="h-4 w-4" />
-            Passer sans marquer
+            <SkipForward className="h-4 w-4 shrink-0" />
+            <span className="truncate">Passer</span>
           </Button>
           
           {showQuizOption && onDoQuiz && (
@@ -80,19 +80,19 @@ export function MarkAsReadDialog({
                 onDoQuiz();
               }}
               variant="outline"
-              className="gap-2 border-primary text-primary hover:bg-primary/10"
+              className="gap-2 border-primary text-primary hover:bg-primary/10 shrink-0"
             >
-              <HelpCircle className="h-4 w-4" />
-              Faire le quiz
+              <HelpCircle className="h-4 w-4 shrink-0" />
+              <span className="truncate">Quiz</span>
             </Button>
           )}
           
           <AlertDialogAction
             onClick={onMarkAsRead}
-            className="gap-2 bg-progress-complete hover:bg-progress-complete/90"
+            className="gap-2 bg-progress-complete hover:bg-progress-complete/90 shrink-0"
           >
-            <Check className="h-4 w-4" />
-            Marquer et continuer
+            <Check className="h-4 w-4 shrink-0" />
+            <span className="truncate">Marquer lu</span>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
