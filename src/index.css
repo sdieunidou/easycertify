@@ -199,10 +199,11 @@
 }
 
 .markdown-content pre {
-  @apply rounded-lg p-4 mb-4 overflow-x-auto text-sm;
+  @apply rounded-lg p-4 mb-4 overflow-x-auto text-sm max-w-full;
   background: hsl(var(--code-bg));
   border: 1px solid hsl(var(--code-border));
 }
+
 
 .markdown-content pre code {
   @apply bg-transparent border-0 p-0 text-foreground/90;
@@ -217,7 +218,7 @@
 }
 
 .markdown-content table {
-  @apply w-full mb-4 border-collapse;
+  @apply w-full mb-4 border-collapse block overflow-x-auto max-w-full;
 }
 
 .markdown-content th, .markdown-content td {
