@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Check, Star, ChevronLeft, ChevronRight, Loader2, AlertCircle, ExternalLink, HelpCircle } from 'lucide-react';
@@ -23,9 +23,15 @@ interface ContentViewerProps {
   onNavigate: (direction: 'prev' | 'next') => void;
   hasPrev: boolean;
   hasNext: boolean;
+  onQuizStateChange?: (hasQuiz: boolean, quizCompleted: boolean) => void;
 }
 
-export function ContentViewer({
+export interface ContentViewerHandle {
+  scrollToQuiz: () => void;
+  showQuiz: () => void;
+}
+
+export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>(({
   certification,
   category,
   topic,
@@ -37,10 +43,13 @@ export function ContentViewer({
   onNavigate,
   hasPrev,
   hasNext,
-}: ContentViewerProps) {
+  onQuizStateChange,
+}, ref) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const quizSectionRef = useRef<HTMLDivElement>(null);
   const [quizKey, setQuizKey] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
   
   const contentUrl = `${certification.baseUrl}${category.folder}/${topic.path}`;
   const quizUrl = `${contentUrl}.json`;
@@ -53,12 +62,38 @@ export function ContentViewer({
   // Reset quiz state when topic changes
   useEffect(() => {
     setShowQuiz(false);
+    setQuizCompleted(false);
     setQuizKey(prev => prev + 1);
   }, [topicFullId]);
 
+  // Notify parent of quiz state changes
+  useEffect(() => {
+    if (!isQuizLoading) {
+      onQuizStateChange?.(hasQuiz, quizCompleted);
+    }
+  }, [hasQuiz, quizCompleted, isQuizLoading, onQuizStateChange]);
+
   const handleQuizReset = useCallback(() => {
     setQuizKey(prev => prev + 1);
+    setQuizCompleted(false);
   }, []);
+
+  const handleQuizComplete = useCallback(() => {
+    setQuizCompleted(true);
+  }, []);
+
+  const scrollToQuiz = useCallback(() => {
+    setShowQuiz(true);
+    setTimeout(() => {
+      quizSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, []);
+
+  // Expose methods to parent
+  useImperativeHandle(ref, () => ({
+    scrollToQuiz,
+    showQuiz: () => setShowQuiz(true),
+  }), [scrollToQuiz]);
 
   // Reset scroll to top when topic changes
   useEffect(() => {
@@ -172,7 +207,7 @@ export function ContentViewer({
 
               {/* Quiz Section */}
               {!isQuizLoading && hasQuiz && shuffledQuestions.length > 0 && (
-                <div className="mt-8 pt-8 border-t border-border">
+                <div ref={quizSectionRef} className="mt-8 pt-8 border-t border-border">
                   {!showQuiz ? (
                     <Button 
                       onClick={() => setShowQuiz(true)} 
@@ -188,6 +223,7 @@ export function ContentViewer({
                       title="Quiz"
                       questions={shuffledQuestions}
                       onReset={handleQuizReset}
+                      onComplete={handleQuizComplete}
                     />
                   )}
                 </div>
@@ -227,4 +263,4 @@ export function ContentViewer({
       </footer>
     </div>
   );
-}
+});

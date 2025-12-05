@@ -19,9 +19,10 @@ interface QuizProps {
   title: string;
   questions: QuizQuestion[];
   onReset: () => void;
+  onComplete?: () => void;
 }
 
-export function Quiz({ title, questions, onReset }: QuizProps) {
+export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
@@ -79,12 +80,13 @@ export function Quiz({ title, questions, onReset }: QuizProps) {
       // Calculate final results
       const correctCount = [...answeredQuestions.values()].filter(a => a.isCorrect).length + (isCorrectAnswer ? 1 : 0);
       setResults({ correct: correctCount, total: questions.length });
+      onComplete?.();
     } else {
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswers([]);
       setHasSubmitted(false);
     }
-  }, [isLastQuestion, answeredQuestions, isCorrectAnswer, questions.length]);
+  }, [isLastQuestion, answeredQuestions, isCorrectAnswer, questions.length, onComplete]);
 
   const handleReset = useCallback(() => {
     setCurrentIndex(0);

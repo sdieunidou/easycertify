@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
-import { ContentViewer } from '@/components/ContentViewer';
+import { ContentViewer, ContentViewerHandle } from '@/components/ContentViewer';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { MarkAsReadDialog } from '@/components/MarkAsReadDialog';
 import { certifications, Category, Topic } from '@/data/certificationData';
@@ -24,6 +24,10 @@ const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showMarkAsReadDialog, setShowMarkAsReadDialog] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<'prev' | 'next' | null>(null);
+  const [currentHasQuiz, setCurrentHasQuiz] = useState(false);
+  const [currentQuizCompleted, setCurrentQuizCompleted] = useState(false);
+  
+  const contentViewerRef = useRef<ContentViewerHandle>(null);
   
   const {
     completed,
@@ -135,14 +139,25 @@ const Index = () => {
   const handleNavigate = useCallback((direction: 'prev' | 'next') => {
     if (direction === 'next' && selectedTopic) {
       const topicFullId = `${selectedTopic.certificationId}-${selectedTopic.categoryId}-${selectedTopic.topicId}`;
-      if (!isCompleted(topicFullId)) {
+      // Show dialog if not completed OR if there's an incomplete quiz
+      if (!isCompleted(topicFullId) || (currentHasQuiz && !currentQuizCompleted)) {
         setPendingNavigation(direction);
         setShowMarkAsReadDialog(true);
         return;
       }
     }
     performNavigation(direction);
-  }, [selectedTopic, isCompleted, performNavigation]);
+  }, [selectedTopic, isCompleted, performNavigation, currentHasQuiz, currentQuizCompleted]);
+
+  const handleQuizStateChange = useCallback((hasQuiz: boolean, quizCompleted: boolean) => {
+    setCurrentHasQuiz(hasQuiz);
+    setCurrentQuizCompleted(quizCompleted);
+  }, []);
+
+  const handleDoQuiz = useCallback(() => {
+    contentViewerRef.current?.scrollToQuiz();
+    setPendingNavigation(null);
+  }, []);
 
   const handleMarkAsReadAndNavigate = useCallback(() => {
     if (selectedTopic && pendingNavigation) {
@@ -243,6 +258,7 @@ const Index = () => {
 
         {currentTopicData ? (
           <ContentViewer
+            ref={contentViewerRef}
             certification={currentTopicData.certification}
             category={currentTopicData.category}
             topic={currentTopicData.topic}
@@ -254,6 +270,7 @@ const Index = () => {
             onNavigate={handleNavigate}
             hasPrev={currentTopicIndex > 0}
             hasNext={currentTopicIndex < allTopics.length - 1}
+            onQuizStateChange={handleQuizStateChange}
           />
         ) : (
           <WelcomeScreen
@@ -272,7 +289,10 @@ const Index = () => {
           onOpenChange={setShowMarkAsReadDialog}
           onMarkAsRead={handleMarkAsReadAndNavigate}
           onSkip={handleSkipNavigation}
+          onDoQuiz={handleDoQuiz}
           topicTitle={currentTopicData.topic.title}
+          hasQuiz={currentHasQuiz}
+          quizCompleted={currentQuizCompleted}
         />
       )}
     </div>

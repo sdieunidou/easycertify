@@ -8,14 +8,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Check, SkipForward } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Check, SkipForward, HelpCircle } from 'lucide-react';
 
 interface MarkAsReadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onMarkAsRead: () => void;
   onSkip: () => void;
+  onDoQuiz?: () => void;
   topicTitle: string;
+  hasQuiz?: boolean;
+  quizCompleted?: boolean;
 }
 
 export function MarkAsReadDialog({
@@ -23,20 +27,34 @@ export function MarkAsReadDialog({
   onOpenChange,
   onMarkAsRead,
   onSkip,
+  onDoQuiz,
   topicTitle,
+  hasQuiz = false,
+  quizCompleted = false,
 }: MarkAsReadDialogProps) {
+  const showQuizOption = hasQuiz && !quizCompleted;
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="bg-card border-border">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-foreground">
-            Marquer comme lu ?
+            {showQuizOption ? "Quiz disponible !" : "Marquer comme lu ?"}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-muted-foreground">
-            Voulez-vous marquer "<span className="font-medium text-foreground">{topicTitle}</span>" comme lu avant de passer à la fiche suivante ?
+            {showQuizOption ? (
+              <>
+                Un quiz est disponible pour "<span className="font-medium text-foreground">{topicTitle}</span>". 
+                Voulez-vous tester vos connaissances avant de continuer ?
+              </>
+            ) : (
+              <>
+                Voulez-vous marquer "<span className="font-medium text-foreground">{topicTitle}</span>" comme lu avant de passer à la fiche suivante ?
+              </>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="gap-2 sm:gap-0">
+        <AlertDialogFooter className="flex-col sm:flex-row gap-2">
           <AlertDialogCancel
             onClick={onSkip}
             className="gap-2"
@@ -44,6 +62,21 @@ export function MarkAsReadDialog({
             <SkipForward className="h-4 w-4" />
             Passer
           </AlertDialogCancel>
+          
+          {showQuizOption && onDoQuiz && (
+            <Button
+              onClick={() => {
+                onOpenChange(false);
+                onDoQuiz();
+              }}
+              variant="outline"
+              className="gap-2 border-primary text-primary hover:bg-primary/10"
+            >
+              <HelpCircle className="h-4 w-4" />
+              Faire le quiz
+            </Button>
+          )}
+          
           <AlertDialogAction
             onClick={onMarkAsRead}
             className="gap-2 bg-progress-complete hover:bg-progress-complete/90"
