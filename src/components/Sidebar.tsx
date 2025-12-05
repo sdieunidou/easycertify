@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap, Github, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Certification, Category, Topic } from '@/data/certificationData';
@@ -43,7 +43,13 @@ export function Sidebar({
   );
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Keep the category of the selected topic always expanded
+  // Auto-expand category when selected topic changes
+  useEffect(() => {
+    if (currentCategoryId && !expandedCategories.includes(currentCategoryId)) {
+      setExpandedCategories(prev => [...prev, currentCategoryId]);
+    }
+  }, [currentCategoryId]);
+
   const effectiveExpandedCategories = currentCategoryId 
     ? [...new Set([...expandedCategories, currentCategoryId])]
     : expandedCategories;
