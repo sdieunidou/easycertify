@@ -150,7 +150,9 @@
 
 /* Markdown content styling */
 .markdown-content {
-  @apply leading-relaxed;
+  @apply leading-relaxed overflow-x-hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .markdown-content h1 {
