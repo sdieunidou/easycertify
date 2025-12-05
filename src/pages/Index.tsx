@@ -6,8 +6,16 @@ import { ContentViewer, ContentViewerHandle } from '@/components/ContentViewer';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { MarkAsReadDialog } from '@/components/MarkAsReadDialog';
 import { SEO, TopicSEO } from '@/components/SEO';
+import { StreakDisplay } from '@/components/StreakDisplay';
+import { FocusMode, FocusModeButton } from '@/components/FocusMode';
+import { PrintButton } from '@/components/PrintButton';
+import { ExamSimulator, ExamResult } from '@/components/ExamSimulator';
+import { ExamConfigDialog, ExamConfig } from '@/components/ExamConfigDialog';
 import { certifications, Category, Topic } from '@/data/certificationData';
 import { useProgress } from '@/hooks/useProgress';
+import { useStreaks } from '@/hooks/useStreaks';
+import { useExamHistory } from '@/hooks/useExamHistory';
+import { useMarkdown } from '@/hooks/useMarkdown';
 import { Button } from '@/components/ui/button';
 
 interface SelectedTopic {
@@ -28,6 +36,12 @@ const Index = () => {
   const [pendingNavigation, setPendingNavigation] = useState<'prev' | 'next' | null>(null);
   const [currentHasQuiz, setCurrentHasQuiz] = useState(false);
   const [currentQuizCompleted, setCurrentQuizCompleted] = useState(false);
+  const [focusModeOpen, setFocusModeOpen] = useState(false);
+  const [examConfigOpen, setExamConfigOpen] = useState(false);
+  const [examCertification, setExamCertification] = useState<string | null>(null);
+  const [examQuestions, setExamQuestions] = useState<any[]>([]);
+  const [examRunning, setExamRunning] = useState(false);
+  const [examConfig, setExamConfig] = useState<ExamConfig | null>(null);
   
   const contentViewerRef = useRef<ContentViewerHandle>(null);
   
@@ -39,6 +53,18 @@ const Index = () => {
     isFavorite,
     setLastVisited,
   } = useProgress();
+
+  const {
+    currentStreak,
+    bestStreak,
+    isActiveToday,
+    canUseFreeze,
+    useFreeze,
+    recordActivity,
+    activityHistory,
+  } = useStreaks();
+
+  const { addResult } = useExamHistory();
 
   // Initialize from URL params
   useEffect(() => {
@@ -116,7 +142,8 @@ const Index = () => {
     setSelectedTopic({ certificationId: certId, categoryId: catId, topicId });
     setLastVisited(`${certId}-${catId}-${topicId}`);
     navigate(`/${certId}/${catId}/${topicId}`);
-  }, [setLastVisited, navigate]);
+    recordActivity(); // Record streak activity
+  }, [setLastVisited, navigate, recordActivity]);
 
   const handleSelectFirstTopic = useCallback((certId: string) => {
     setSelectedCertification(certId);
@@ -182,18 +209,100 @@ const Index = () => {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (focusModeOpen || examRunning) return; // Let focus mode handle its own keys
+      
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         handleNavigate('prev');
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         handleNavigate('next');
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (currentTopicData) {
+          e.preventDefault();
+          setFocusModeOpen(true);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNavigate]);
+  }, [handleNavigate, focusModeOpen, examRunning, currentTopicData]);
+
+  // Handle starting exam
+  const handleStartExam = useCallback((certId: string) => {
+    setExamCertification(certId);
+    setExamConfigOpen(true);
+  }, []);
+
+  const handleExamConfigConfirm = useCallback(async (config: ExamConfig) => {
+    setExamConfig(config);
+    setExamConfigOpen(false);
+    
+    // Fetch quiz questions from selected categories
+    const cert = certifications.find(c => c.id === examCertification);
+    if (!cert) return;
+
+    const questions: any[] = [];
+    const selectedCategories = cert.categories.filter(c => config.categories.includes(c.id));
+
+    for (const category of selectedCategories) {
+      for (const topic of category.topics) {
+        const quizUrl = `${cert.baseUrl}${category.folder}/${topic.path}.json`;
+        try {
+          const response = await fetch(quizUrl);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.questions) {
+              data.questions.forEach((q: any) => {
+                questions.push({
+                  ...q,
+                  id: `${category.id}-${topic.id}-${q.id}`,
+                  topicId: topic.id,
+                  topicTitle: topic.title,
+                  categoryTitle: category.title,
+                });
+              });
+            }
+          }
+        } catch {}
+      }
+    }
+
+    // Shuffle and limit questions
+    const shuffled = questions.sort(() => Math.random() - 0.5);
+    const limited = shuffled.slice(0, config.questionsCount);
+    
+    setExamQuestions(limited);
+    setExamRunning(true);
+  }, [examCertification]);
+
+  const handleExamComplete = useCallback((result: ExamResult) => {
+    if (examCertification && examConfig) {
+      addResult({
+        certificationId: examCertification,
+        categories: examConfig.categories,
+        questionsCount: result.questionsCount,
+        timeLimit: examConfig.timeLimit,
+        timeUsed: result.timeUsed,
+        correctAnswers: result.correctAnswers,
+        totalQuestions: result.questionsCount,
+        score: Math.round((result.correctAnswers / result.questionsCount) * 100),
+      });
+    }
+  }, [examCertification, examConfig, addResult]);
+
+  const handleExamClose = useCallback(() => {
+    setExamRunning(false);
+    setExamQuestions([]);
+    setExamConfig(null);
+  }, []);
+
+  // Get markdown content for focus mode
+  const currentContentUrl = currentTopicData 
+    ? `${currentTopicData.certification.baseUrl}${currentTopicData.category.folder}/${currentTopicData.topic.path}`
+    : '';
+  const { content: focusModeContent } = useMarkdown(focusModeOpen ? currentContentUrl : '');
 
   // Get current topic details
   const currentTopicData = useMemo(() => {
@@ -266,7 +375,7 @@ const Index = () => {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile header - only show when certification is selected */}
         {selectedCertification && (
-          <header className="lg:hidden flex items-center gap-3 p-4 border-b border-border bg-background">
+          <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-background">
             <Button
               variant="ghost"
               size="icon"
@@ -275,11 +384,37 @@ const Index = () => {
               <Menu className="h-5 w-5" />
             </Button>
             <span className="font-semibold text-foreground">CertifyHub</span>
+            <StreakDisplay
+              currentStreak={currentStreak}
+              bestStreak={bestStreak}
+              isActiveToday={isActiveToday()}
+              canUseFreeze={canUseFreeze()}
+              onUseFreeze={useFreeze}
+              activityHistory={activityHistory}
+            />
           </header>
         )}
 
         {currentTopicData ? (
-          <ContentViewer
+          <>
+            {/* Action buttons for focus and print */}
+            <div className="hidden lg:flex items-center justify-end gap-2 px-6 py-2 border-b border-border bg-background">
+              <StreakDisplay
+                currentStreak={currentStreak}
+                bestStreak={bestStreak}
+                isActiveToday={isActiveToday()}
+                canUseFreeze={canUseFreeze()}
+                onUseFreeze={useFreeze}
+                activityHistory={activityHistory}
+              />
+              <FocusModeButton onClick={() => setFocusModeOpen(true)} />
+              <PrintButton
+                title={currentTopicData.topic.title}
+                categoryTitle={currentTopicData.category.title}
+                certificationName={currentTopicData.certification.name}
+              />
+            </div>
+            <ContentViewer
             ref={contentViewerRef}
             certification={currentTopicData.certification}
             category={currentTopicData.category}
@@ -294,12 +429,15 @@ const Index = () => {
             hasNext={currentTopicIndex < allTopics.length - 1}
             onQuizStateChange={handleQuizStateChange}
           />
+          </>
         ) : (
           <WelcomeScreen
             certifications={certifications}
             onSelectFirstTopic={handleSelectFirstTopic}
             completedCounts={completedCounts}
             totalCounts={totalCounts}
+            onStartExam={handleStartExam}
+          />
           />
         )}
       </div>
@@ -315,6 +453,44 @@ const Index = () => {
           topicTitle={currentTopicData.topic.title}
           hasQuiz={currentHasQuiz}
           quizCompleted={currentQuizCompleted}
+        />
+      )}
+
+      {/* Focus Mode */}
+      {currentTopicData && (
+        <FocusMode
+          isOpen={focusModeOpen}
+          onClose={() => setFocusModeOpen(false)}
+          content={focusModeContent}
+          title={currentTopicData.topic.title}
+          categoryTitle={currentTopicData.category.title}
+          certificationName={currentTopicData.certification.name}
+          onNavigate={(dir) => {
+            performNavigation(dir);
+          }}
+          hasPrev={currentTopicIndex > 0}
+          hasNext={currentTopicIndex < allTopics.length - 1}
+        />
+      )}
+
+      {/* Exam Config Dialog */}
+      {examCertification && (
+        <ExamConfigDialog
+          open={examConfigOpen}
+          onOpenChange={setExamConfigOpen}
+          certification={certifications.find(c => c.id === examCertification)!}
+          onStart={handleExamConfigConfirm}
+        />
+      )}
+
+      {/* Exam Simulator */}
+      {examRunning && examQuestions.length > 0 && examConfig && examCertification && (
+        <ExamSimulator
+          questions={examQuestions}
+          timeLimit={examConfig.timeLimit}
+          certificationName={certifications.find(c => c.id === examCertification)?.name || ''}
+          onComplete={handleExamComplete}
+          onClose={handleExamClose}
         />
       )}
       </div>

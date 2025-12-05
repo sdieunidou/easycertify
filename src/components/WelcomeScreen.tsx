@@ -1,4 +1,4 @@
-import { BookOpen, Target, Star, CheckCircle, ArrowRight, HelpCircle } from 'lucide-react';
+import { BookOpen, Target, Star, CheckCircle, ArrowRight, HelpCircle, Flame, Play, Maximize2, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Certification } from '@/data/certificationData';
@@ -8,6 +8,7 @@ interface WelcomeScreenProps {
   onSelectFirstTopic: (certId: string) => void;
   completedCounts: Record<string, number>;
   totalCounts: Record<string, number>;
+  onStartExam?: (certId: string) => void;
 }
 
 export function WelcomeScreen({
@@ -15,6 +16,7 @@ export function WelcomeScreen({
   onSelectFirstTopic,
   completedCounts,
   totalCounts,
+  onStartExam,
 }: WelcomeScreenProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 bg-background overflow-auto">
@@ -46,8 +48,7 @@ export function WelcomeScreen({
             return (
               <Card
                 key={cert.id}
-                className="p-4 sm:p-6 hover:border-primary/50 transition-all cursor-pointer group"
-                onClick={() => onSelectFirstTopic(cert.id)}
+                className="p-4 sm:p-6 hover:border-primary/50 transition-all group"
               >
                 <div className="flex items-start justify-between mb-3 sm:mb-4">
                   <div>
@@ -62,12 +63,11 @@ export function WelcomeScreen({
                       Certification {cert.name}
                     </h3>
                   </div>
-                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                   {cert.categories.length} catégories • {total} fiches
                 </p>
-                <div className="space-y-2">
+                <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">Progression</span>
                     <span className="text-foreground font-medium">{percent}%</span>
@@ -79,48 +79,90 @@ export function WelcomeScreen({
                     />
                   </div>
                 </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="flex-1 gap-2"
+                    onClick={() => onSelectFirstTopic(cert.id)}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                    Commencer
+                  </Button>
+                  {onStartExam && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => onStartExam(cert.id)}
+                    >
+                      <Play className="h-4 w-4" />
+                      Examen
+                    </Button>
+                  )}
+                </div>
               </Card>
             );
           })}
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-          <div className="text-center p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
+          <div className="text-center p-3 sm:p-4 bg-card rounded-lg border border-border">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
               <Target className="h-5 w-5 text-primary" />
             </div>
-            <h4 className="font-medium text-foreground text-sm mb-1">Suivi de progression</h4>
+            <h4 className="font-medium text-foreground text-sm mb-1">Progression</h4>
             <p className="text-xs text-muted-foreground">
-              Marquez les fiches lues et suivez votre avancement
+              Suivez votre avancement
             </p>
           </div>
-          <div className="text-center p-4">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
-              <Star className="h-5 w-5 text-yellow-500" />
-            </div>
-            <h4 className="font-medium text-foreground text-sm mb-1">Favoris</h4>
-            <p className="text-xs text-muted-foreground">
-              Ajoutez des fiches en favoris pour y revenir facilement
-            </p>
-          </div>
-          <div className="text-center p-4">
+          <div className="text-center p-3 sm:p-4 bg-card rounded-lg border border-border">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
               <HelpCircle className="h-5 w-5 text-primary" />
             </div>
-            <h4 className="font-medium text-foreground text-sm mb-1">Quiz interactifs</h4>
+            <h4 className="font-medium text-foreground text-sm mb-1">Quiz</h4>
             <p className="text-xs text-muted-foreground">
-              Testez vos connaissances avec des quiz randomisés
+              Testez vos connaissances
             </p>
           </div>
-          <div className="text-center p-4">
+          <div className="text-center p-3 sm:p-4 bg-card rounded-lg border border-border">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
-              <CheckCircle className="h-5 w-5 text-progress-complete" />
+              <Play className="h-5 w-5 text-primary" />
             </div>
-            <h4 className="font-medium text-foreground text-sm mb-1">Navigation rapide</h4>
+            <h4 className="font-medium text-foreground text-sm mb-1">Examen simulé</h4>
             <p className="text-xs text-muted-foreground">
-              Recherche et navigation au clavier
+              Conditions réelles
             </p>
+          </div>
+          <div className="text-center p-3 sm:p-4 bg-card rounded-lg border border-border">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
+              <Flame className="h-5 w-5 text-orange-500" />
+            </div>
+            <h4 className="font-medium text-foreground text-sm mb-1">Streaks</h4>
+            <p className="text-xs text-muted-foreground">
+              Gardez le rythme
+            </p>
+          </div>
+        </div>
+
+        {/* Secondary features */}
+        <div className="grid grid-cols-4 gap-4 text-center">
+          <div className="p-2">
+            <Star className="h-5 w-5 text-yellow-500 mx-auto mb-1" />
+            <span className="text-xs text-muted-foreground">Favoris</span>
+          </div>
+          <div className="p-2">
+            <Maximize2 className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
+            <span className="text-xs text-muted-foreground">Mode focus</span>
+          </div>
+          <div className="p-2">
+            <Printer className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
+            <span className="text-xs text-muted-foreground">Impression</span>
+          </div>
+          <div className="p-2">
+            <CheckCircle className="h-5 w-5 text-accent mx-auto mb-1" />
+            <span className="text-xs text-muted-foreground">Clavier</span>
           </div>
         </div>
       </div>
