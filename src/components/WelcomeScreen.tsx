@@ -1,4 +1,4 @@
-import { BookOpen, Target, Star, CheckCircle, ArrowRight } from 'lucide-react';
+import { BookOpen, Target, Star, CheckCircle, ArrowRight, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Certification } from '@/data/certificationData';
@@ -85,7 +85,7 @@ export function WelcomeScreen({
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
           <div className="text-center p-4">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
               <Target className="h-5 w-5 text-primary" />
@@ -102,6 +102,15 @@ export function WelcomeScreen({
             <h4 className="font-medium text-foreground text-sm mb-1">Favoris</h4>
             <p className="text-xs text-muted-foreground">
               Ajoutez des fiches en favoris pour y revenir facilement
+            </p>
+          </div>
+          <div className="text-center p-4">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-muted mb-3">
+              <HelpCircle className="h-5 w-5 text-primary" />
+            </div>
+            <h4 className="font-medium text-foreground text-sm mb-1">Quiz interactifs</h4>
+            <p className="text-xs text-muted-foreground">
+              Testez vos connaissances avec des quiz randomisés
             </p>
           </div>
           <div className="text-center p-4">
