@@ -391,10 +391,9 @@ const Index = () => {
   }, [navigate]);
 
   const handleSelectCertification = useCallback((id: string) => {
-    setSelectedCertification(id);
-    setSelectedTopic(null);
-    navigate(`/${id}`);
-  }, [navigate]);
+    // Navigate to first topic of the certification
+    handleSelectFirstTopic(id);
+  }, [handleSelectFirstTopic]);
 
   return (
     <>
