@@ -290,6 +290,8 @@ export const certifications: Certification[] = [
           { id: 'profiler-misc', title: 'Web Profiler', path: 'profiler.md' },
           { id: 'runtime', title: 'Runtime', path: 'runtime.md' },
           { id: 'attributes', title: 'Attributs Symfony', path: 'attributes.md' },
+          { id: 'sf-contracts', title: 'Symfony Contracts', path: 'contracts.md' },
+          { id: 'create-bundle', title: 'Création de Bundle', path: 'bundles.md' },
         ],
       },
       {
@@ -373,6 +375,9 @@ export const certifications: Certification[] = [
           { id: 'intl', title: 'Intl', path: 'intl.md' },
           { id: 'lock', title: 'Lock', path: 'lock.md' },
           { id: 'filesystem', title: 'Filesystem', path: 'filesystem.md' },
+          { id: 'finder', title: 'Clock', path: 'finder.md' },
+          { id: 'dotenv', title: 'Clock', path: 'dotenv.md' },
+          { id: 'string', title: 'string', path: 'string.md' },
           { id: 'clock', title: 'Clock', path: 'clock.md' },
         ],
       },
