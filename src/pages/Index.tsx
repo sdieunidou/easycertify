@@ -206,6 +206,16 @@ const Index = () => {
     setPendingNavigation(null);
   }, [pendingNavigation, performNavigation]);
 
+  // Get current topic details
+  const currentTopicData = useMemo(() => {
+    if (!selectedTopic || !currentCert) return null;
+    const category = currentCert.categories.find(c => c.id === selectedTopic.categoryId);
+    if (!category) return null;
+    const topic = category.topics.find(t => t.id === selectedTopic.topicId);
+    if (!topic) return null;
+    return { certification: currentCert, category, topic };
+  }, [selectedTopic, currentCert]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -303,16 +313,6 @@ const Index = () => {
     ? `${currentTopicData.certification.baseUrl}${currentTopicData.category.folder}/${currentTopicData.topic.path}`
     : '';
   const { content: focusModeContent } = useMarkdown(focusModeOpen ? currentContentUrl : '');
-
-  // Get current topic details
-  const currentTopicData = useMemo(() => {
-    if (!selectedTopic || !currentCert) return null;
-    const category = currentCert.categories.find(c => c.id === selectedTopic.categoryId);
-    if (!category) return null;
-    const topic = category.topics.find(t => t.id === selectedTopic.topicId);
-    if (!topic) return null;
-    return { certification: currentCert, category, topic };
-  }, [selectedTopic, currentCert]);
 
   const topicFullId = selectedTopic
     ? `${selectedTopic.certificationId}-${selectedTopic.categoryId}-${selectedTopic.topicId}`
@@ -437,7 +437,6 @@ const Index = () => {
             completedCounts={completedCounts}
             totalCounts={totalCounts}
             onStartExam={handleStartExam}
-          />
           />
         )}
       </div>
