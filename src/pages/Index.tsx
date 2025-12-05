@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu, Loader2 } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { ContentViewer, ContentViewerHandle } from '@/components/ContentViewer';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
@@ -17,6 +17,14 @@ import { useStreaks } from '@/hooks/useStreaks';
 import { useExamHistory } from '@/hooks/useExamHistory';
 import { useMarkdown } from '@/hooks/useMarkdown';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface SelectedTopic {
   certificationId: string;
@@ -42,6 +50,8 @@ const Index = () => {
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
   const [examRunning, setExamRunning] = useState(false);
   const [examConfig, setExamConfig] = useState<ExamConfig | null>(null);
+  const [examLoading, setExamLoading] = useState(false);
+  const [examLoadingProgress, setExamLoadingProgress] = useState({ current: 0, total: 0, found: 0 });
   
   const contentViewerRef = useRef<ContentViewerHandle>(null);
   
@@ -248,40 +258,64 @@ const Index = () => {
   const handleExamConfigConfirm = useCallback(async (config: ExamConfig) => {
     setExamConfig(config);
     setExamConfigOpen(false);
+    setExamLoading(true);
     
     // Fetch quiz questions from selected categories
     const cert = certifications.find(c => c.id === examCertification);
-    if (!cert) return;
+    if (!cert) {
+      setExamLoading(false);
+      return;
+    }
 
     const questions: any[] = [];
     const selectedCategories = cert.categories.filter(c => config.categories.includes(c.id));
+    
+    // Calculate total topics to fetch
+    const allTopics: { category: typeof selectedCategories[0]; topic: typeof selectedCategories[0]['topics'][0] }[] = [];
+    selectedCategories.forEach(category => {
+      category.topics.forEach(topic => {
+        allTopics.push({ category, topic });
+      });
+    });
+    
+    setExamLoadingProgress({ current: 0, total: allTopics.length, found: 0 });
 
-    for (const category of selectedCategories) {
-      for (const topic of category.topics) {
-        const quizUrl = `${cert.baseUrl}${category.folder}/${topic.path}.json`;
-        try {
-          const response = await fetch(quizUrl);
-          if (response.ok) {
-            const data = await response.json();
-            if (data.questions) {
-              data.questions.forEach((q: any) => {
-                questions.push({
-                  ...q,
-                  id: `${category.id}-${topic.id}-${q.id}`,
-                  topicId: topic.id,
-                  topicTitle: topic.title,
-                  categoryTitle: category.title,
-                });
+    for (let i = 0; i < allTopics.length; i++) {
+      const { category, topic } = allTopics[i];
+      const quizUrl = `${cert.baseUrl}${category.folder}/${topic.path}.json`;
+      
+      try {
+        const response = await fetch(quizUrl);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.questions) {
+            data.questions.forEach((q: any) => {
+              questions.push({
+                ...q,
+                id: `${category.id}-${topic.id}-${q.id}`,
+                topicId: topic.id,
+                topicTitle: topic.title,
+                categoryTitle: category.title,
               });
-            }
+            });
           }
-        } catch {}
-      }
+        }
+      } catch {}
+      
+      setExamLoadingProgress({ current: i + 1, total: allTopics.length, found: questions.length });
+    }
+
+    setExamLoading(false);
+
+    // Check if we have enough questions
+    if (questions.length === 0) {
+      alert('Aucune question trouvée pour les catégories sélectionnées. Les fichiers quiz ne sont peut-être pas encore disponibles.');
+      return;
     }
 
     // Shuffle and limit questions
     const shuffled = questions.sort(() => Math.random() - 0.5);
-    const limited = shuffled.slice(0, config.questionsCount);
+    const limited = shuffled.slice(0, Math.min(config.questionsCount, questions.length));
     
     setExamQuestions(limited);
     setExamRunning(true);
@@ -481,6 +515,34 @@ const Index = () => {
           onStart={handleExamConfigConfirm}
         />
       )}
+
+      {/* Exam Loading Dialog */}
+      <Dialog open={examLoading} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Préparation de l'examen...
+            </DialogTitle>
+            <DialogDescription>
+              Récupération des questions depuis les fichiers quiz
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Progress 
+              value={examLoadingProgress.total > 0 
+                ? (examLoadingProgress.current / examLoadingProgress.total) * 100 
+                : 0
+              } 
+              className="h-2"
+            />
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Fiches analysées: {examLoadingProgress.current}/{examLoadingProgress.total}</span>
+              <span className="text-accent">{examLoadingProgress.found} questions trouvées</span>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Exam Simulator */}
       {examRunning && examQuestions.length > 0 && examConfig && examCertification && (
