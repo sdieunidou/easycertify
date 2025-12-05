@@ -1,7 +1,6 @@
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -9,7 +8,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Check, SkipForward, HelpCircle } from 'lucide-react';
+import { Check, SkipForward, HelpCircle, X } from 'lucide-react';
 
 interface MarkAsReadDialogProps {
   open: boolean;
@@ -37,8 +36,15 @@ export function MarkAsReadDialog({
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="bg-card border-border">
+        <button
+          onClick={() => onOpenChange(false)}
+          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Fermer</span>
+        </button>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-foreground">
+          <AlertDialogTitle className="text-foreground pr-6">
             {showQuizOption ? "Quiz disponible !" : "Marquer comme lu ?"}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-muted-foreground">
@@ -55,10 +61,6 @@ export function MarkAsReadDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-          <AlertDialogCancel className="gap-2">
-            Annuler
-          </AlertDialogCancel>
-          
           <Button
             onClick={() => {
               onOpenChange(false);
