@@ -2,8 +2,9 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://easycertify.lovable.app/)
 [![Built with Lovable](https://img.shields.io/badge/built%20with-Lovable-ff69b4)](https://lovable.dev)
+[![SEO Ready](https://img.shields.io/badge/SEO-ready-blue)](https://easycertify.lovable.app/sitemap.xml)
 
-A modern, interactive study interface designed to help developers prepare for **Symfony 7.0** and **Sylius v2** certifications. Browse structured study guides, track your progress, test your knowledge with quizzes, and navigate content efficiently.
+A modern, interactive study interface designed to help developers prepare for **Symfony 7.0** and **Sylius v2** certifications. Browse structured study guides, track your progress, test your knowledge with randomized quizzes, and navigate content efficiently.
 
 🔗 **[Use the App →](https://easycertify.lovable.app/)**
 
@@ -12,7 +13,7 @@ A modern, interactive study interface designed to help developers prepare for **
 - **📚 Structured Content** - Organized study guides covering all certification topics
 - **🔄 Dual Certification Support** - Switch between Symfony and Sylius content instantly
 - **📊 Progress Tracking** - Mark topics as completed and track your overall progress
-- **🧠 Interactive Quizzes** - Test your knowledge with randomized quizzes for each topic
+- **🧠 Interactive Quizzes** - Test your knowledge with randomized quizzes (questions & answers shuffled each time)
 - **⭐ Favorites** - Bookmark important topics for quick access
 - **⌨️ Keyboard Navigation** - Use arrow keys (← →) to navigate between topics
 - **🔗 Shareable URLs** - Share direct links to specific topics
@@ -20,6 +21,7 @@ A modern, interactive study interface designed to help developers prepare for **
 - **🌙 Dark Mode** - Eye-friendly dark theme optimized for reading
 - **📱 Responsive Design** - Works on desktop, tablet, and mobile
 - **💾 Local Storage** - Your progress is saved locally in your browser
+- **🔍 SEO Optimized** - Full SEO support with meta tags, sitemap, and structured data
 
 ## 🚀 Getting Started
 
@@ -62,6 +64,7 @@ The study content is fetched directly from these GitHub repositories:
 - **React Markdown** - Content Rendering
 - **React Syntax Highlighter** - Code Highlighting
 - **React Router** - Client-side Routing
+- **React Helmet Async** - SEO Meta Tags
 
 ## 📁 Project Structure
 
@@ -74,6 +77,7 @@ src/
 │   ├── Quiz.tsx              # Interactive quiz component
 │   ├── CodeBlock.tsx         # Syntax highlighted code blocks
 │   ├── MarkAsReadDialog.tsx  # Confirmation dialog for progress
+│   ├── SEO.tsx               # SEO meta tags component
 │   └── ui/                   # shadcn/ui components
 ├── data/
 │   └── certificationData.ts  # Certification structure & topics
@@ -81,8 +85,14 @@ src/
 │   ├── useProgress.ts        # Progress tracking logic
 │   ├── useMarkdown.ts        # Markdown fetching hook
 │   └── useQuiz.ts            # Quiz data fetching & randomization
+├── utils/
+│   └── sitemap.ts            # Sitemap generation utilities
 └── pages/
     └── Index.tsx             # Main application page
+
+public/
+├── robots.txt                # Search engine crawling rules
+└── sitemap.xml               # XML sitemap for SEO
 ```
 
 ## 🎯 Certification Topics Covered
@@ -120,6 +130,33 @@ src/
 - Admin & API
 - And more...
 
+## 🧠 Quiz System
+
+Each topic can have an associated quiz file (`topic.md.json`) with the following structure:
+
+```json
+{
+  "source_file": "path/to/file.md",
+  "title": "Topic Title",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Question text",
+      "type": "single_choice | multiple_choice",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correct_answers": ["Option C"],
+      "explanation": "Explanation for the correct answer."
+    }
+  ]
+}
+```
+
+Quizzes feature:
+- Randomized question order on each attempt
+- Randomized answer options to prevent memorization
+- Immediate feedback with explanations
+- Score tracking per quiz session
+
 ## 🤝 Contributing
 
 Contributions are welcome! If you find errors in the study content, please contribute to the source repositories:
@@ -134,6 +171,7 @@ This project is open source. The study content is maintained in separate reposit
 ## 🔗 Links
 
 - **Live App**: [https://easycertify.lovable.app/](https://easycertify.lovable.app/)
+- **Sitemap**: [https://easycertify.lovable.app/sitemap.xml](https://easycertify.lovable.app/sitemap.xml)
 - **Symfony Documentation**: [symfony.com/doc](https://symfony.com/doc/current/index.html)
 - **Sylius Documentation**: [docs.sylius.com](https://docs.sylius.com/)
 - **Symfony Certification**: [certification.symfony.com](https://certification.symfony.com/)
