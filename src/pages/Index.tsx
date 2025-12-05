@@ -45,6 +45,7 @@ const Index = () => {
   const [currentHasQuiz, setCurrentHasQuiz] = useState(false);
   const [currentQuizCompleted, setCurrentQuizCompleted] = useState(false);
   const [focusModeOpen, setFocusModeOpen] = useState(false);
+  const focusModeRef = useRef(false);
   const [examConfigOpen, setExamConfigOpen] = useState(false);
   const [examCertification, setExamCertification] = useState<string | null>(null);
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
@@ -76,7 +77,10 @@ const Index = () => {
 
   const { addResult } = useExamHistory();
 
-  // Initialize from URL params
+  // Keep focusModeRef in sync with focusModeOpen state
+  useEffect(() => {
+    focusModeRef.current = focusModeOpen;
+  }, [focusModeOpen]);
   useEffect(() => {
     if (certificationId) {
       const cert = certifications.find(c => c.id === certificationId);
@@ -194,6 +198,7 @@ const Index = () => {
   }, []);
 
   const handleDoQuiz = useCallback(() => {
+    focusModeRef.current = false;
     setFocusModeOpen(false); // Close focus mode to show quiz
     contentViewerRef.current?.scrollToQuiz();
     setShowMarkAsReadDialog(false);
@@ -201,7 +206,7 @@ const Index = () => {
   }, []);
 
   const handleMarkAsReadAndNavigate = useCallback(() => {
-    const wasFocusModeOpen = focusModeOpen;
+    const wasFocusModeOpen = focusModeRef.current;
     if (selectedTopic && pendingNavigation) {
       const topicFullId = `${selectedTopic.certificationId}-${selectedTopic.categoryId}-${selectedTopic.topicId}`;
       toggleCompleted(topicFullId);
@@ -213,10 +218,10 @@ const Index = () => {
     if (wasFocusModeOpen) {
       setTimeout(() => setFocusModeOpen(true), 100);
     }
-  }, [selectedTopic, pendingNavigation, toggleCompleted, performNavigation, focusModeOpen]);
+  }, [selectedTopic, pendingNavigation, toggleCompleted, performNavigation]);
 
   const handleSkipNavigation = useCallback(() => {
-    const wasFocusModeOpen = focusModeOpen;
+    const wasFocusModeOpen = focusModeRef.current;
     if (pendingNavigation) {
       performNavigation(pendingNavigation);
     }
@@ -226,7 +231,7 @@ const Index = () => {
     if (wasFocusModeOpen) {
       setTimeout(() => setFocusModeOpen(true), 100);
     }
-  }, [pendingNavigation, performNavigation, focusModeOpen]);
+  }, [pendingNavigation, performNavigation]);
 
   // Get current topic details
   const currentTopicData = useMemo(() => {
