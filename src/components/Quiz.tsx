@@ -25,17 +25,18 @@ interface QuizProps {
 
 export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [results, setResults] = useState<{ correct: number; total: number } | null>(null);
   const [answeredQuestions, setAnsweredQuestions] = useState<Map<number, { selected: string[]; isCorrect: boolean }>>(new Map());
 
-  // Scroll to bottom of card when answer is submitted
+  // Scroll to bottom of quiz when answer is submitted
   useEffect(() => {
-    if (hasSubmitted && cardRef.current) {
+    if (hasSubmitted && bottomRef.current) {
       setTimeout(() => {
-        cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 400);
     }
   }, [hasSubmitted]);
@@ -225,7 +226,7 @@ export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
           </div>
         )}
 
-        <div className="flex justify-end gap-2 pt-2">
+        <div ref={bottomRef} className="flex justify-end gap-2 pt-2">
           {!hasSubmitted ? (
             <Button 
               onClick={handleSubmit} 
