@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { ContentViewer, ContentViewerHandle } from '@/components/ContentViewer';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { MarkAsReadDialog } from '@/components/MarkAsReadDialog';
+import { SEO, TopicSEO } from '@/components/SEO';
 import { certifications, Category, Topic } from '@/data/certificationData';
 import { useProgress } from '@/hooks/useProgress';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ interface SelectedTopic {
 const Index = () => {
   const { certificationId, categoryId, topicId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [selectedCertification, setSelectedCertification] = useState<string | null>(certificationId || null);
   const [selectedTopic, setSelectedTopic] = useState<SelectedTopic | null>(null);
@@ -220,7 +222,21 @@ const Index = () => {
   }, [navigate]);
 
   return (
-    <div className="flex h-screen overflow-hidden dark">
+    <>
+      {/* SEO */}
+      {currentTopicData ? (
+        <TopicSEO
+          certificationName={currentTopicData.certification.name}
+          certificationVersion={currentTopicData.certification.version}
+          categoryTitle={currentTopicData.category.title}
+          topicTitle={currentTopicData.topic.title}
+          path={location.pathname}
+        />
+      ) : (
+        <SEO path={location.pathname} />
+      )}
+
+      <div className="flex h-screen overflow-hidden dark">
       {/* Mobile overlay */}
       {sidebarOpen && selectedCertification && (
         <div 
@@ -301,7 +317,8 @@ const Index = () => {
           quizCompleted={currentQuizCompleted}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
