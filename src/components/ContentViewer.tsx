@@ -107,9 +107,9 @@ export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>
   }, [topicFullId]);
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-background min-h-0 overflow-hidden w-full">
+    <div className="flex-1 flex flex-col h-full bg-background min-h-0 overflow-hidden w-full max-w-full">
       {/* Header */}
-      <header className="border-b border-border px-4 sm:px-6 py-3 sm:py-4 shrink-0">
+      <header className="border-b border-border px-4 sm:px-6 py-3 sm:py-4 shrink-0 overflow-hidden max-w-full">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
@@ -159,8 +159,8 @@ export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>
             </Button>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-2 mt-2 sm:mt-3">
-          <h1 className="text-lg sm:text-2xl font-bold text-foreground flex-1">{topic.title}</h1>
+        <div className="flex items-center justify-between gap-2 mt-2 sm:mt-3 overflow-hidden">
+          <h1 className="text-lg sm:text-2xl font-bold text-foreground flex-1 truncate">{topic.title}</h1>
           {!isLoading && !error && content && (
             <TableOfContents 
               content={content} 
@@ -171,8 +171,8 @@ export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>
       </header>
 
       {/* Content */}
-      <ScrollArea ref={scrollRef} className="flex-1 min-h-0 w-full">
-        <div className="max-w-full w-full px-4 sm:px-6 py-6 sm:py-8 overflow-x-hidden">
+      <ScrollArea ref={scrollRef} className="flex-1 min-h-0 w-full max-w-full overflow-hidden">
+        <div className="w-full px-4 sm:px-6 py-6 sm:py-8 overflow-x-hidden" style={{ maxWidth: '100%' }}>
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -193,7 +193,7 @@ export const ContentViewer = forwardRef<ContentViewerHandle, ContentViewerProps>
             </div>
           ) : (
             <>
-              <article className="markdown-content animate-fade-in overflow-x-hidden break-words max-w-full lg:max-w-4xl lg:mx-auto">
+              <article className="markdown-content animate-fade-in" style={{ maxWidth: '100%', overflowX: 'hidden', wordBreak: 'break-word' }}>
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{

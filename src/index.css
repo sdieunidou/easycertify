@@ -115,9 +115,15 @@
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground antialiased;
+  html, body {
+    @apply bg-background text-foreground antialiased overflow-x-hidden;
     font-family: 'Inter', system-ui, sans-serif;
+    max-width: 100vw;
+  }
+
+  #root {
+    @apply overflow-x-hidden;
+    max-width: 100vw;
   }
 
   code, pre, .font-mono {
@@ -150,9 +156,10 @@
 
 /* Markdown content styling */
 .markdown-content {
-  @apply leading-relaxed overflow-x-hidden;
+  @apply leading-relaxed overflow-x-hidden w-full;
   word-break: break-word;
   overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .markdown-content h1 {
