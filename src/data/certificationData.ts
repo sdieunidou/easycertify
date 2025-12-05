@@ -51,8 +51,21 @@ export const certifications: Certification[] = [
         ],
       },
       {
-        id: 'http',
+        id: 'design-patterns',
         number: '2',
+        title: 'Design Patterns',
+        folder: '15-design-patterns',
+        topics: [
+          { id: 'solid', title: 'Principes SOLID', path: 'solid.md' },
+          { id: 'law-of-demeter', title: 'Loi de Déméter', path: 'law-of-demeter.md' },
+          { id: 'gof-creation', title: 'GoF - Création', path: 'gof-creation.md' },
+          { id: 'gof-structure', title: 'GoF - Structure', path: 'gof-structure.md' },
+          { id: 'gof-comportement', title: 'GoF - Comportement', path: 'gof-comportement.md' },
+        ],
+      },
+      {
+        id: 'http',
+        number: '3',
         title: 'HTTP',
         folder: '02-http',
         topics: [
@@ -69,7 +82,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'architecture-symfony',
-        number: '3',
+        number: '4',
         title: 'Architecture Symfony',
         folder: '03-architecture-symfony',
         topics: [
@@ -94,7 +107,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'controleurs',
-        number: '4',
+        number: '5',
         title: 'Contrôleurs',
         folder: '04-controleurs',
         topics: [
@@ -115,7 +128,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'routage',
-        number: '5',
+        number: '6',
         title: 'Routage',
         folder: '05-routage',
         topics: [
@@ -134,7 +147,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'templating-twig',
-        number: '6',
+        number: '7',
         title: 'Templating Twig',
         folder: '06-templating-twig',
         topics: [
@@ -159,7 +172,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'formulaires',
-        number: '7',
+        number: '8',
         title: 'Formulaires',
         folder: '07-formulaires',
         topics: [
@@ -182,7 +195,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'validation',
-        number: '8',
+        number: '9',
         title: 'Validation',
         folder: '08-validation-donnees',
         topics: [
@@ -198,7 +211,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'injection-dependances',
-        number: '9',
+        number: '10',
         title: 'Injection de Dépendances',
         folder: '09-injection-dependances',
         topics: [
@@ -217,7 +230,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'securite',
-        number: '10',
+        number: '11',
         title: 'Sécurité',
         folder: '10-securite',
         topics: [
@@ -237,7 +250,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'cache',
-        number: '11',
+        number: '12',
         title: 'Cache (HTTP & Composant)',
         folder: '11-cache',
         topics: [
@@ -248,7 +261,7 @@ export const certifications: Certification[] = [
           { id: 'http-server-side', title: 'Server-side', path: 'http-server-side.md' },
           { id: 'http-esi', title: 'ESI', path: 'http-esi.md' },
           { id: 'http-sessions', title: 'Sessions', path: 'http-sessions.md' },
-          { id: 'component-overview', title: 'Vue d\'ensemble & Adapters', path: 'component-overview.md' },
+          { id: 'component-overview', title: "Vue d'ensemble & Adapters", path: 'component-overview.md' },
           { id: 'component-pools', title: 'Pools & Namespaces', path: 'component-pools.md' },
           { id: 'component-features', title: 'Fonctionnalités (Tags, Chain, Encryption)', path: 'component-features.md' },
           { id: 'component-async', title: 'Cache Asynchrone (Stampede)', path: 'component-async.md' },
@@ -257,7 +270,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'console',
-        number: '12',
+        number: '13',
         title: 'Console',
         folder: '12-console',
         topics: [
@@ -274,7 +287,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'tests-automatises',
-        number: '13',
+        number: '14',
         title: 'Tests Automatisés',
         folder: '13-tests-automatises',
         topics: [
@@ -294,7 +307,7 @@ export const certifications: Certification[] = [
       },
       {
         id: 'divers',
-        number: '14',
+        number: '15',
         title: 'Divers',
         folder: '14-divers',
         topics: [
@@ -312,19 +325,6 @@ export const certifications: Certification[] = [
           { id: 'contracts', title: 'Symfony Contracts', path: 'contracts.md' },
           { id: 'symfony-ai', title: 'Symfony AI', path: 'symfony-ai.md' },
           { id: 'bundles', title: 'Création de Bundle', path: 'bundles.md' },
-        ],
-      },
-      {
-        id: 'design-patterns',
-        number: '15',
-        title: 'Design Patterns',
-        folder: '15-design-patterns',
-        topics: [
-          { id: 'solid', title: 'Principes SOLID', path: 'solid.md' },
-          { id: 'law-of-demeter', title: 'Loi de Déméter', path: 'law-of-demeter.md' },
-          { id: 'gof-creation', title: 'GoF - Création', path: 'gof-creation.md' },
-          { id: 'gof-structure', title: 'GoF - Structure', path: 'gof-structure.md' },
-          { id: 'gof-comportement', title: 'GoF - Comportement', path: 'gof-comportement.md' },
         ],
       },
       {
@@ -379,8 +379,21 @@ export const certifications: Certification[] = [
         ],
       },
       {
-        id: 'composants',
+        id: 'frontend',
         number: '19',
+        title: 'Frontend',
+        folder: '20-frontend',
+        topics: [
+          { id: 'asset-mapper', title: 'AssetMapper (No-Build)', path: 'asset-mapper.md' },
+          { id: 'webpack-encore', title: 'Webpack Encore (Build)', path: 'webpack-encore.md' },
+          { id: 'symfony-ux', title: 'Symfony UX & Stimulus', path: 'symfony-ux.md' },
+          { id: 'web-link', title: 'WebLink & Performance', path: 'web-link.md' },
+          { id: 'assets-processing', title: 'Traitement des Assets (Sass/Tailwind)', path: 'assets-processing.md' },
+        ],
+      },
+      {
+        id: 'composants',
+        number: '20',
         title: 'Composants',
         folder: '19-composants',
         topics: [
@@ -406,19 +419,6 @@ export const certifications: Certification[] = [
           { id: 'uid', title: 'UID (UUID/ULID)', path: 'uid.md' },
           { id: 'webhook', title: 'Webhook', path: 'webhook.md' },
           { id: 'yaml', title: 'Yaml', path: 'yaml.md' },
-        ],
-      },
-      {
-        id: 'frontend',
-        number: '20',
-        title: 'Frontend',
-        folder: '20-frontend',
-        topics: [
-          { id: 'asset-mapper', title: 'AssetMapper (No-Build)', path: 'asset-mapper.md' },
-          { id: 'webpack-encore', title: 'Webpack Encore (Build)', path: 'webpack-encore.md' },
-          { id: 'symfony-ux', title: 'Symfony UX & Stimulus', path: 'symfony-ux.md' },
-          { id: 'web-link', title: 'WebLink & Performance', path: 'web-link.md' },
-          { id: 'assets-processing', title: 'Traitement des Assets (Sass/Tailwind)', path: 'assets-processing.md' },
         ],
       },
     ],
@@ -510,7 +510,7 @@ export const certifications: Certification[] = [
         title: 'Devise (Currency)',
         folder: '07-devise',
         topics: [
-          { id: 'stockage-argent', title: 'Comment l\'argent et les devises sont stockés', path: '01-stockage-argent.md' },
+          { id: 'stockage-argent', title: "Comment l'argent et les devises sont stockés", path: '01-stockage-argent.md' },
           { id: 'taux-change', title: 'Les taux de change et leur comportement', path: '02-taux-change.md' },
           { id: 'calculs-monetaires', title: 'Calculs monétaires et présentations', path: '03-calculs-monetaires.md' },
           { id: 'configuration-devises', title: 'Configuration des devises', path: '04-configuration-devises.md' },
@@ -549,7 +549,7 @@ export const certifications: Certification[] = [
           { id: 'role-composants', title: 'Rôle des principaux composants', path: '03-role-composants.md' },
           { id: 'environnements', title: 'Ce qui est préconfiguré selon les environnements', path: '04-environnements.md' },
           { id: 'dependances', title: 'Dépendances actuelles de Sylius', path: '05-dependances.md' },
-          { id: 'api-basique', title: 'Questions basiques sur l\'API Sylius', path: '06-api-basique.md' },
+          { id: 'api-basique', title: "Questions basiques sur l'API Sylius", path: '06-api-basique.md' },
           { id: 'machine-etats-generique', title: 'Utilisation générique de la machine à états', path: '07-machine-etats-generique.md' },
         ],
       },
@@ -628,7 +628,7 @@ export const certifications: Certification[] = [
           { id: 'configuration-resource', title: 'Configuration de Sylius Resource', path: '02-configuration-resource.md' },
           { id: 'services-resource', title: 'Services disponibles et fonctionnalités', path: '03-services-resource.md' },
           { id: 'traduction-entites', title: 'Comment fonctionne la traduction des entités ?', path: '04-traduction-entites.md' },
-          { id: 'creation-resource', title: 'Création d\'une Ressource pas à pas', path: '05-creation-resource.md' },
+          { id: 'creation-resource', title: "Création d'une Ressource pas à pas", path: '05-creation-resource.md' },
         ],
       },
       {
@@ -649,7 +649,7 @@ export const certifications: Certification[] = [
         title: 'Boutique (Shop)',
         folder: '18-boutique',
         topics: [
-          { id: 'emails-clients', title: 'Envoi d\'emails aux clients', path: '01-emails-clients.md' },
+          { id: 'emails-clients', title: "Envoi d'emails aux clients", path: '01-emails-clients.md' },
           { id: 'users-vs-customers', title: 'Shop Users vs Customers', path: '02-users-vs-customers.md' },
         ],
       },
