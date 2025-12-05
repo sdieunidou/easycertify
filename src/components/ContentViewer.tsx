@@ -1,12 +1,14 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Check, Star, ChevronLeft, ChevronRight, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
+import { Check, Star, ChevronLeft, ChevronRight, Loader2, AlertCircle, ExternalLink, HelpCircle } from 'lucide-react';
 import { CodeBlock } from '@/components/CodeBlock';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMarkdown } from '@/hooks/useMarkdown';
+import { useQuiz } from '@/hooks/useQuiz';
+import { Quiz } from '@/components/Quiz';
 import { Category, Topic, Certification } from '@/data/certificationData';
 
 interface ContentViewerProps {
@@ -37,10 +39,26 @@ export function ContentViewer({
   hasNext,
 }: ContentViewerProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [quizKey, setQuizKey] = useState(0);
+  const [showQuiz, setShowQuiz] = useState(false);
+  
   const contentUrl = `${certification.baseUrl}${category.folder}/${topic.path}`;
+  const quizUrl = `${contentUrl}.json`;
+  
   const { content, isLoading, error } = useMarkdown(contentUrl);
+  const { shuffledQuestions, hasQuiz, isLoading: isQuizLoading } = useQuiz(quizUrl);
 
   const githubUrl = `https://github.com/sdieunidou/${certification.id}-certification/blob/main/${category.folder}/${topic.path}`;
+
+  // Reset quiz state when topic changes
+  useEffect(() => {
+    setShowQuiz(false);
+    setQuizKey(prev => prev + 1);
+  }, [topicFullId]);
+
+  const handleQuizReset = useCallback(() => {
+    setQuizKey(prev => prev + 1);
+  }, []);
 
   // Reset scroll to top when topic changes
   useEffect(() => {
@@ -130,26 +148,51 @@ export function ContentViewer({
               </a>
             </div>
           ) : (
-            <article className="markdown-content animate-fade-in">
-              <ReactMarkdown 
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code({ node, className, children, ...props }) {
-                    const inline = !className && !String(children).includes('\n');
-                    return (
-                      <CodeBlock 
-                        className={className} 
-                        inline={inline}
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </CodeBlock>
-                    );
-                  },
-                }}
-              >
-                {content}
-              </ReactMarkdown>
-            </article>
+            <>
+              <article className="markdown-content animate-fade-in">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code({ node, className, children, ...props }) {
+                      const inline = !className && !String(children).includes('\n');
+                      return (
+                        <CodeBlock 
+                          className={className} 
+                          inline={inline}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </CodeBlock>
+                      );
+                    },
+                  }}
+                >
+                  {content}
+                </ReactMarkdown>
+              </article>
+
+              {/* Quiz Section */}
+              {!isQuizLoading && hasQuiz && shuffledQuestions.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-border">
+                  {!showQuiz ? (
+                    <Button 
+                      onClick={() => setShowQuiz(true)} 
+                      variant="outline" 
+                      className="w-full gap-2"
+                    >
+                      <HelpCircle className="h-4 w-4" />
+                      Tester vos connaissances ({shuffledQuestions.length} questions)
+                    </Button>
+                  ) : (
+                    <Quiz 
+                      key={quizKey}
+                      title="Quiz"
+                      questions={shuffledQuestions}
+                      onReset={handleQuizReset}
+                    />
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
       </ScrollArea>
