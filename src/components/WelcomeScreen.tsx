@@ -31,6 +31,9 @@ export function WelcomeScreen({
             Préparez vos certifications Symfony et Sylius avec des fiches pédagogiques
             structurées et un suivi de progression.
           </p>
+          <p className="text-xs text-muted-foreground/70 mt-3 px-4">
+            Contenu généré par IA sans vérification humaine. Référez-vous à la documentation officielle.
+          </p>
         </div>
 
         {/* Certification Cards */}
