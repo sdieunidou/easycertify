@@ -222,40 +222,45 @@ const Index = () => {
   return (
     <div className="flex h-screen overflow-hidden dark">
       {/* Mobile overlay */}
-      {sidebarOpen && (
+      {sidebarOpen && selectedCertification && (
         <div 
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      <Sidebar
-        certifications={certifications}
-        selectedCertification={selectedCertification}
-        selectedTopic={topicFullId || null}
-        onSelectCertification={handleSelectCertification}
-        onSelectTopic={handleSelectTopic}
-        onGoHome={handleGoHome}
-        isCompleted={isCompleted}
-        isFavorite={isFavorite}
-        completedCount={currentCompleted}
-        totalTopics={currentTotal}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+      {/* Sidebar - only show when certification is selected */}
+      {selectedCertification && (
+        <Sidebar
+          certifications={certifications}
+          selectedCertification={selectedCertification}
+          selectedTopic={topicFullId || null}
+          onSelectCertification={handleSelectCertification}
+          onSelectTopic={handleSelectTopic}
+          onGoHome={handleGoHome}
+          isCompleted={isCompleted}
+          isFavorite={isFavorite}
+          completedCount={currentCompleted}
+          totalTopics={currentTotal}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
+      )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile header */}
-        <header className="lg:hidden flex items-center gap-3 p-4 border-b border-border bg-background">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <span className="font-semibold text-foreground">CertifyHub</span>
-        </header>
+        {/* Mobile header - only show when certification is selected */}
+        {selectedCertification && (
+          <header className="lg:hidden flex items-center gap-3 p-4 border-b border-border bg-background">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <span className="font-semibold text-foreground">CertifyHub</span>
+          </header>
+        )}
 
         {currentTopicData ? (
           <ContentViewer
