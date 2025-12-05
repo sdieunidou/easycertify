@@ -25,7 +25,7 @@ export function WelcomeScreen({
             <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
           </div>
           <h1 className="text-2xl sm:text-4xl font-bold text-foreground mb-3 sm:mb-4">
-            Bienvenue sur CertifPrep
+            Bienvenue sur CertifyHub
           </h1>
           <p className="text-sm sm:text-lg text-muted-foreground max-w-lg mx-auto px-4">
             Préparez vos certifications Symfony et Sylius avec des fiches pédagogiques

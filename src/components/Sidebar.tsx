@@ -91,7 +91,7 @@ export function Sidebar({
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-lg text-sidebar-foreground">CertifPrep</span>
+            <span className="font-semibold text-lg text-sidebar-foreground">CertifyHub</span>
           </button>
           {onClose && (
             <button
