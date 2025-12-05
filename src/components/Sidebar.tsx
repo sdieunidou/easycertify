@@ -35,8 +35,18 @@ export function Sidebar({
   isOpen = true,
   onClose,
 }: SidebarProps) {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  // Extract current category from selectedTopic
+  const currentCategoryId = selectedTopic ? selectedTopic.split('-')[1] : null;
+  
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(
+    currentCategoryId ? [currentCategoryId] : []
+  );
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Keep the category of the selected topic always expanded
+  const effectiveExpandedCategories = currentCategoryId 
+    ? [...new Set([...expandedCategories, currentCategoryId])]
+    : expandedCategories;
 
   const currentCert = selectedCertification ? certifications.find(c => c.id === selectedCertification) : null;
 
@@ -163,7 +173,7 @@ export function Sidebar({
         <ScrollArea className="flex-1">
           <div className="p-2">
             {filteredCategories?.map(category => {
-            const isExpanded = expandedCategories.includes(category.id) || !!searchQuery;
+            const isExpanded = effectiveExpandedCategories.includes(category.id) || !!searchQuery;
             const topics = filterTopics(category.topics, category.id);
             const categoryCompletedCount = category.topics.filter(t => 
               isCompleted(`${selectedCertification}-${category.id}-${t.id}`)

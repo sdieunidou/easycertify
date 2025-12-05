@@ -194,11 +194,14 @@ const Index = () => {
   }, []);
 
   const handleDoQuiz = useCallback(() => {
+    setFocusModeOpen(false); // Close focus mode to show quiz
     contentViewerRef.current?.scrollToQuiz();
+    setShowMarkAsReadDialog(false);
     setPendingNavigation(null);
   }, []);
 
   const handleMarkAsReadAndNavigate = useCallback(() => {
+    const wasFocusModeOpen = focusModeOpen;
     if (selectedTopic && pendingNavigation) {
       const topicFullId = `${selectedTopic.certificationId}-${selectedTopic.categoryId}-${selectedTopic.topicId}`;
       toggleCompleted(topicFullId);
@@ -206,15 +209,24 @@ const Index = () => {
     }
     setShowMarkAsReadDialog(false);
     setPendingNavigation(null);
-  }, [selectedTopic, pendingNavigation, toggleCompleted, performNavigation]);
+    // Restore focus mode if it was open
+    if (wasFocusModeOpen) {
+      setTimeout(() => setFocusModeOpen(true), 100);
+    }
+  }, [selectedTopic, pendingNavigation, toggleCompleted, performNavigation, focusModeOpen]);
 
   const handleSkipNavigation = useCallback(() => {
+    const wasFocusModeOpen = focusModeOpen;
     if (pendingNavigation) {
       performNavigation(pendingNavigation);
     }
     setShowMarkAsReadDialog(false);
     setPendingNavigation(null);
-  }, [pendingNavigation, performNavigation]);
+    // Restore focus mode if it was open
+    if (wasFocusModeOpen) {
+      setTimeout(() => setFocusModeOpen(true), 100);
+    }
+  }, [pendingNavigation, performNavigation, focusModeOpen]);
 
   // Get current topic details
   const currentTopicData = useMemo(() => {
