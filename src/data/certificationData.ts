@@ -413,6 +413,7 @@ export const certifications: Certification[] = [
           { id: 'http-client', title: 'HttpClient', path: 'http-client.md' },
           { id: 'http-foundation', title: 'HttpFoundation', path: 'http-foundation.md' },
           { id: 'config', title: 'Config', path: 'config.md' },
+          { id: 'options-resolver', title: 'OptionResolver', path: 'options-resolver.md' },
           { id: 'dotenv', title: 'Dotenv', path: 'dotenv.md' },
           { id: 'serializer', title: 'Serializer', path: 'serializer.md' },
           { id: 'translation', title: 'Translation', path: 'translation.md' },
