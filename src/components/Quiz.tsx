@@ -5,6 +5,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { CheckCircle, XCircle, RotateCcw, HelpCircle, ChevronRight, CheckSquare, Circle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import ReactMarkdown from 'react-markdown';
+import { CodeBlock } from './CodeBlock';
 
 interface QuizQuestion {
   id: number;
@@ -151,7 +153,20 @@ export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <p className="font-medium text-foreground">{currentQuestion.question}</p>
+          <div className="font-medium text-foreground prose prose-sm dark:prose-invert max-w-none">
+            <ReactMarkdown
+              components={{
+                code: ({ className, children, ...props }) => (
+                  <CodeBlock className={className} inline={!className}>
+                    {String(children).replace(/\n$/, '')}
+                  </CodeBlock>
+                ),
+                p: ({ children }) => <span>{children}</span>,
+              }}
+            >
+              {currentQuestion.question}
+            </ReactMarkdown>
+          </div>
           
           {currentQuestion.type === 'multiple_choice' ? (
             <Badge variant="secondary" className="gap-1.5 text-xs font-normal">
@@ -207,7 +222,20 @@ export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
                     {isSelected && <div className="w-2 h-2 rounded-full bg-primary" />}
                   </div>
                 )}
-                <span className="flex-1 text-foreground">{option}</span>
+                <span className="flex-1 text-foreground prose prose-sm dark:prose-invert max-w-none">
+                  <ReactMarkdown
+                    components={{
+                      code: ({ className, children, ...props }) => (
+                        <CodeBlock className={className} inline={!className}>
+                          {String(children).replace(/\n$/, '')}
+                        </CodeBlock>
+                      ),
+                      p: ({ children }) => <span>{children}</span>,
+                    }}
+                  >
+                    {option}
+                  </ReactMarkdown>
+                </span>
                 {hasSubmitted && isCorrect && (
                   <CheckCircle className="h-5 w-5 text-progress-complete shrink-0" />
                 )}
