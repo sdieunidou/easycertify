@@ -93,6 +93,7 @@ export const certifications: Certification[] = [
           { id: 'licence', title: 'Licence', path: 'licence.md' },
           { id: 'composants', title: 'Composants', path: 'composants.md' },
           { id: 'organisation-code', title: 'Organisation du code', path: 'organisation-code.md' },
+          { id: 'environnements', title: 'Environnements', path: 'environnements.md' },
           { id: 'bridges', title: 'Bridges', path: 'bridges.md' },
           { id: 'request-handling', title: 'Traitement de la requête', path: 'request-handling.md' },
           { id: 'exception-handling', title: 'Gestion des exceptions', path: 'exception-handling.md' },
