@@ -68,19 +68,26 @@ export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
 
   const handleSubmit = useCallback(() => {
     if (selectedAnswers.length === 0) return;
+    
+    // Calculate if answer is correct BEFORE setting hasSubmitted
+    const correctSet = new Set(currentQuestion.correct_answers);
+    const selectedSet = new Set(selectedAnswers);
+    const isAnswerCorrect = correctSet.size === selectedSet.size && 
+      [...correctSet].every(answer => selectedSet.has(answer));
+    
     setHasSubmitted(true);
     
     setAnsweredQuestions(prev => {
       const newMap = new Map(prev);
-      newMap.set(currentIndex, { selected: selectedAnswers, isCorrect: isCorrectAnswer });
+      newMap.set(currentIndex, { selected: selectedAnswers, isCorrect: isAnswerCorrect });
       return newMap;
     });
-  }, [selectedAnswers, currentIndex, isCorrectAnswer]);
+  }, [selectedAnswers, currentIndex, currentQuestion]);
 
   const handleNext = useCallback(() => {
     if (isLastQuestion) {
-      // Calculate final results
-      const correctCount = [...answeredQuestions.values()].filter(a => a.isCorrect).length + (isCorrectAnswer ? 1 : 0);
+      // Calculate final results - all answers are already in answeredQuestions
+      const correctCount = [...answeredQuestions.values()].filter(a => a.isCorrect).length;
       setResults({ correct: correctCount, total: questions.length });
       onComplete?.();
     } else {
@@ -88,7 +95,7 @@ export function Quiz({ title, questions, onReset, onComplete }: QuizProps) {
       setSelectedAnswers([]);
       setHasSubmitted(false);
     }
-  }, [isLastQuestion, answeredQuestions, isCorrectAnswer, questions.length, onComplete]);
+  }, [isLastQuestion, answeredQuestions, questions.length, onComplete]);
 
   const handleReset = useCallback(() => {
     setCurrentIndex(0);
