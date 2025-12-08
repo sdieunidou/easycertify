@@ -48,8 +48,26 @@ export function Sidebar({
   onClose,
   onResetCertificationProgress,
 }: SidebarProps) {
-  // Extract current category from selectedTopic (format: certId-categoryId-topicId)
-  const currentCategoryId = selectedTopic ? selectedTopic.split('-')[1] : null;
+  // Extract current category from selectedTopic
+  // Format: certId-categoryId-topicId (but topicId can contain dashes)
+  // We need to find the categoryId by matching against actual categories
+  const extractCategoryId = (topicFullId: string | null): string | null => {
+    if (!topicFullId || !selectedCertification) return null;
+    const cert = certifications.find(c => c.id === selectedCertification);
+    if (!cert) return null;
+    
+    // topicFullId format: certId-categoryId-topicId
+    // Find which category this belongs to by checking if topicFullId starts with certId-categoryId-
+    for (const cat of cert.categories) {
+      const prefix = `${selectedCertification}-${cat.id}-`;
+      if (topicFullId.startsWith(prefix)) {
+        return cat.id;
+      }
+    }
+    return null;
+  };
+  
+  const currentCategoryId = extractCategoryId(selectedTopic);
   
   const [expandedCategories, setExpandedCategories] = useState<string[]>(
     currentCategoryId ? [currentCategoryId] : []
@@ -58,15 +76,16 @@ export function Sidebar({
 
   // Auto-expand category when selected topic changes
   useEffect(() => {
-    if (currentCategoryId) {
+    const catId = extractCategoryId(selectedTopic);
+    if (catId) {
       setExpandedCategories(prev => {
-        if (!prev.includes(currentCategoryId)) {
-          return [...prev, currentCategoryId];
+        if (!prev.includes(catId)) {
+          return [...prev, catId];
         }
         return prev;
       });
     }
-  }, [selectedTopic]); // Listen to selectedTopic changes, not just currentCategoryId
+  }, [selectedTopic, selectedCertification]);
 
   const effectiveExpandedCategories = currentCategoryId 
     ? [...new Set([...expandedCategories, currentCategoryId])]
