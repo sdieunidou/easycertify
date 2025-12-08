@@ -48,7 +48,7 @@ export function Sidebar({
   onClose,
   onResetCertificationProgress,
 }: SidebarProps) {
-  // Extract current category from selectedTopic
+  // Extract current category from selectedTopic (format: certId-categoryId-topicId)
   const currentCategoryId = selectedTopic ? selectedTopic.split('-')[1] : null;
   
   const [expandedCategories, setExpandedCategories] = useState<string[]>(
@@ -58,10 +58,15 @@ export function Sidebar({
 
   // Auto-expand category when selected topic changes
   useEffect(() => {
-    if (currentCategoryId && !expandedCategories.includes(currentCategoryId)) {
-      setExpandedCategories(prev => [...prev, currentCategoryId]);
+    if (currentCategoryId) {
+      setExpandedCategories(prev => {
+        if (!prev.includes(currentCategoryId)) {
+          return [...prev, currentCategoryId];
+        }
+        return prev;
+      });
     }
-  }, [currentCategoryId]);
+  }, [selectedTopic]); // Listen to selectedTopic changes, not just currentCategoryId
 
   const effectiveExpandedCategories = currentCategoryId 
     ? [...new Set([...expandedCategories, currentCategoryId])]
