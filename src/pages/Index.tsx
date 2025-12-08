@@ -160,12 +160,23 @@ const Index = () => {
   const handleSelectFirstTopic = useCallback((certId: string) => {
     setSelectedCertification(certId);
     const cert = certifications.find(c => c.id === certId);
-    if (cert && cert.categories.length > 0 && cert.categories[0].topics.length > 0) {
+    if (cert && cert.categories.length > 0) {
+      // Find first unread topic
+      for (const cat of cert.categories) {
+        for (const topic of cat.topics) {
+          const topicFullId = `${certId}-${cat.id}-${topic.id}`;
+          if (!isCompleted(topicFullId)) {
+            handleSelectTopic(certId, cat.id, topic.id);
+            return;
+          }
+        }
+      }
+      // All topics are read, go to first topic
       const firstCat = cert.categories[0];
       const firstTopic = firstCat.topics[0];
       handleSelectTopic(certId, firstCat.id, firstTopic.id);
     }
-  }, [handleSelectTopic]);
+  }, [handleSelectTopic, isCompleted]);
 
   const performNavigation = useCallback((direction: 'prev' | 'next') => {
     if (currentTopicIndex === -1) return;
