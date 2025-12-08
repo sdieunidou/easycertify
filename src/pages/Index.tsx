@@ -63,6 +63,7 @@ const Index = () => {
     isCompleted,
     isFavorite,
     setLastVisited,
+    resetCertificationProgress,
   } = useProgress();
 
   const {
@@ -434,6 +435,7 @@ const Index = () => {
           totalTopics={currentTotal}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          onResetCertificationProgress={resetCertificationProgress}
         />
       )}
 

@@ -68,6 +68,15 @@ export function useProgress() {
     setData({ completed: [], favorites: [], lastVisited: null });
   }, []);
 
+  const resetCertificationProgress = useCallback((certificationId: string) => {
+    setData(prev => ({
+      ...prev,
+      completed: prev.completed.filter(id => !id.startsWith(`${certificationId}-`)),
+      favorites: prev.favorites.filter(id => !id.startsWith(`${certificationId}-`)),
+      lastVisited: prev.lastVisited?.startsWith(`${certificationId}-`) ? null : prev.lastVisited,
+    }));
+  }, []);
+
   return {
     completed: data.completed,
     favorites: data.favorites,
@@ -79,5 +88,6 @@ export function useProgress() {
     isFavorite,
     getProgress,
     resetProgress,
+    resetCertificationProgress,
   };
 }
