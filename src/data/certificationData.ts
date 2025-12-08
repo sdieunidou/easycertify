@@ -162,6 +162,7 @@ export const certifications: Certification[] = [
           { id: 'globales', title: 'Globales', path: 'globales.md' },
           { id: 'filtres-fonctions', title: 'Filtres et Fonctions', path: 'filtres-fonctions.md' },
           { id: 'includes', title: 'Inclusions et Embeds', path: 'includes.md' },
+          { id: 'macros', title: 'Macros', path: 'macros.md' },
           { id: 'components', title: 'Composants Twig', path: 'components.md' },
           { id: 'controles', title: 'Structures de contrôle', path: 'controles.md' },
           { id: 'urls', title: 'URLs', path: 'urls.md' },
