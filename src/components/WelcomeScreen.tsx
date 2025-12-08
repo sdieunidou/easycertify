@@ -87,7 +87,7 @@ export function WelcomeScreen({
                     onClick={() => onSelectFirstTopic(cert.id)}
                   >
                     <ArrowRight className="h-4 w-4" />
-                    Commencer
+                    {completed > 0 ? 'Continuer' : 'Commencer'}
                   </Button>
                   {onStartExam && (
                     <Button
