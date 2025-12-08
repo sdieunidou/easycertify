@@ -87,9 +87,9 @@ export const certifications: Certification[] = [
         title: 'Architecture Symfony',
         folder: '03-architecture-symfony',
         topics: [
-          { id: 'installation', title: 'Installation & Setup', path: 'installation.md' },
           { id: 'flex', title: 'Symfony Flex', path: 'flex.md' },
           { id: 'cli', title: 'Symfony CLI', path: 'cli.md' },
+          { id: 'installation', title: 'Installation & Setup', path: 'installation.md' },
           { id: 'licence', title: 'Licence', path: 'licence.md' },
           { id: 'composants', title: 'Composants', path: 'composants.md' },
           { id: 'organisation-code', title: 'Organisation du code', path: 'organisation-code.md' },
