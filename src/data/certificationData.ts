@@ -154,6 +154,7 @@ export const certifications: Certification[] = [
         title: 'Templating Twig',
         folder: '06-templating-twig',
         topics: [
+          { id: 'twig_internals', title: 'Fonctionnement Interne', path: 'twig_internals.md' },
           { id: 'syntaxe', title: 'Syntaxe (v3.8)', path: 'syntaxe.md' },
           { id: 'rendering', title: 'Méthodes de Rendu (Rendering)', path: 'rendering.md' },
           { id: 'escaping', title: 'Auto escaping', path: 'escaping.md' },
