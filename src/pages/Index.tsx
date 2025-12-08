@@ -519,6 +519,7 @@ const Index = () => {
           topicTitle={currentTopicData.topic.title}
           hasQuiz={currentHasQuiz}
           quizCompleted={currentQuizCompleted}
+          isAlreadyRead={isCompleted(topicFullId)}
         />
       )}
 

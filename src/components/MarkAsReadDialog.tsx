@@ -19,6 +19,7 @@ interface MarkAsReadDialogProps {
   topicTitle: string;
   hasQuiz?: boolean;
   quizCompleted?: boolean;
+  isAlreadyRead?: boolean;
 }
 
 export function MarkAsReadDialog({
@@ -30,8 +31,10 @@ export function MarkAsReadDialog({
   topicTitle,
   hasQuiz = false,
   quizCompleted = false,
+  isAlreadyRead = false,
 }: MarkAsReadDialogProps) {
   const showQuizOption = hasQuiz && !quizCompleted;
+  const showMarkAsReadBtn = !isAlreadyRead;
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -87,13 +90,15 @@ export function MarkAsReadDialog({
             </Button>
           )}
           
-          <AlertDialogAction
-            onClick={onMarkAsRead}
-            className="gap-2 bg-progress-complete hover:bg-progress-complete/90 shrink-0"
-          >
-            <Check className="h-4 w-4 shrink-0" />
-            <span className="truncate">Marquer lu</span>
-          </AlertDialogAction>
+          {showMarkAsReadBtn && (
+            <AlertDialogAction
+              onClick={onMarkAsRead}
+              className="gap-2 bg-progress-complete hover:bg-progress-complete/90 shrink-0"
+            >
+              <Check className="h-4 w-4 shrink-0" />
+              <span className="truncate">Marquer lu</span>
+            </AlertDialogAction>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
