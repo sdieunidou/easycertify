@@ -414,6 +414,7 @@ export const certifications: Certification[] = [
           { id: 'config', title: 'Config', path: 'config.md' },
           { id: 'dotenv', title: 'Dotenv', path: 'dotenv.md' },
           { id: 'serializer', title: 'Serializer', path: 'serializer.md' },
+          { id: 'translation', title: 'Translation', path: 'translation.md' },
           { id: 'mailer', title: 'Mailer', path: 'mailer.md' },
           { id: 'messenger', title: 'Messenger', path: 'messenger.md' },
           { id: 'process', title: 'Process', path: 'process.md' },
