@@ -134,6 +134,7 @@ export const certifications: Certification[] = [
         title: 'Routage',
         folder: '05-routage',
         topics: [
+          { id: 'routing_internal', title: 'Fonctionnement interne', path: 'routing_internal.md' },
           { id: 'configuration', title: 'Configuration (YAML/Attributs)', path: 'configuration.md' },
           { id: 'parametres', title: "Paramètres d'URL", path: 'parametres.md' },
           { id: 'defaults', title: 'Valeurs par défaut', path: 'defaults.md' },
