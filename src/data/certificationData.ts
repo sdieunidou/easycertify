@@ -180,6 +180,7 @@ export const certifications: Certification[] = [
         title: 'Formulaires',
         folder: '07-formulaires',
         topics: [
+          { id: 'form_internals', title: 'Fonctionnement Interne', path: 'form_internals.md' },
           { id: 'creation', title: 'Création', path: 'creation.md' },
           { id: 'processing', title: 'Traitement', path: 'processing.md' },
           { id: 'validation', title: 'Validation', path: 'validation.md' },
@@ -203,6 +204,7 @@ export const certifications: Certification[] = [
         title: 'Validation',
         folder: '08-validation-donnees',
         topics: [
+          { id: 'validation_internals', title: 'Fonctionnement Interne', path: 'validation_internals.md' },
           { id: 'contraintes', title: 'Contraintes Natives', path: 'contraintes.md' },
           { id: 'objets', title: "Validation d'Objets", path: 'objets.md' },
           { id: 'violations', title: 'Violations et Contraintes Custom', path: 'violations.md' },
@@ -219,6 +221,7 @@ export const certifications: Certification[] = [
         title: 'Injection de Dépendances',
         folder: '09-injection-dependances',
         topics: [
+          { id: 'di_internals', title: 'Fonctionnement Interne', path: 'di_internals.md' },
           { id: 'container', title: 'Service Container', path: 'container.md' },
           { id: 'services-natifs', title: 'Services natifs', path: 'services-natifs.md' },
           { id: 'parametres', title: 'Paramètres', path: 'parametres.md' },
@@ -238,6 +241,7 @@ export const certifications: Certification[] = [
         title: 'Sécurité',
         folder: '10-securite',
         topics: [
+          { id: 'security_internals', title: 'Fonctionnement Interne', path: 'security_internals.md' },
           { id: 'authentication', title: 'Authentification', path: 'authentication.md' },
           { id: 'authorization', title: 'Autorisation', path: 'authorization.md' },
           { id: 'configuration-sec', title: 'Configuration', path: 'configuration.md' },
@@ -258,6 +262,7 @@ export const certifications: Certification[] = [
         title: 'Cache (HTTP & Composant)',
         folder: '11-cache',
         topics: [
+          { id: 'cache_internals', title: 'Fonctionnement Interne', path: 'cache_internals.md' },
           { id: 'http-types', title: 'Types de cache', path: 'http-types.md' },
           { id: 'http-expiration', title: 'Expiration', path: 'http-expiration.md' },
           { id: 'http-validation', title: 'Validation', path: 'http-validation.md' },
@@ -278,6 +283,7 @@ export const certifications: Certification[] = [
         title: 'Console',
         folder: '12-console',
         topics: [
+          { id: 'console_internals', title: 'Fonctionnement Interne', path: 'console_internals.md' },
           { id: 'native', title: 'Commandes natives', path: 'native.md' },
           { id: 'custom', title: 'Commandes personnalisées', path: 'custom.md' },
           { id: 'configuration-console', title: 'Configuration', path: 'configuration.md' },
@@ -347,6 +353,7 @@ export const certifications: Certification[] = [
         title: 'Doctrine',
         folder: '17-doctrine',
         topics: [
+          { id: 'doctrine_internals', title: 'Fonctionnement Interne', path: 'doctrine_internals.md' },
           { id: 'mapping', title: 'Mapping ORM (Attributs)', path: 'mapping.md' },
           { id: 'configuration-doctrine', title: 'Configuration', path: 'configuration.md' },
           { id: 'associations', title: 'Associations & Relations', path: 'associations.md' },
