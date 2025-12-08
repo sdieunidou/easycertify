@@ -1,11 +1,22 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap, Github, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, Check, Star, Search, BookOpen, GraduationCap, Github, X, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Certification, Category, Topic } from '@/data/certificationData';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 interface SidebarProps {
   certifications: Certification[];
   selectedCertification: string | null;
@@ -19,6 +30,7 @@ interface SidebarProps {
   totalTopics: number;
   isOpen?: boolean;
   onClose?: () => void;
+  onResetCertificationProgress?: (certificationId: string) => void;
 }
 
 export function Sidebar({
@@ -34,6 +46,7 @@ export function Sidebar({
   totalTopics,
   isOpen = true,
   onClose,
+  onResetCertificationProgress,
 }: SidebarProps) {
   // Extract current category from selectedTopic
   const currentCategoryId = selectedTopic ? selectedTopic.split('-')[1] : null;
@@ -155,6 +168,34 @@ export function Sidebar({
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
+            {completedCount > 0 && onResetCertificationProgress && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground hover:text-destructive">
+                    <RotateCcw className="h-3 w-3 mr-1" />
+                    Réinitialiser la progression
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Réinitialiser la progression ?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Cette action va supprimer toute votre progression pour {currentCert?.name}. 
+                      Les fiches marquées comme lues et les favoris seront réinitialisés.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={() => onResetCertificationProgress(selectedCertification)}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Réinitialiser
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
         )}
       </div>
