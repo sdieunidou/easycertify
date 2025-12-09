@@ -337,6 +337,7 @@ export const certifications: Certification[] = [
           { id: 'profiler-misc', title: 'Web Profiler', path: 'profiler.md' },
           { id: 'runtime', title: 'Runtime', path: 'runtime.md' },
           { id: 'bundles', title: 'Création de Bundle', path: 'bundles.md' },
+          { id: 'lazy-objects', title: 'Lazy Objects', path: 'lazy-objects.md' },
         ],
       },
       {
