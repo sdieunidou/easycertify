@@ -14,6 +14,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
+import { CodeBlock } from '@/components/CodeBlock';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -246,18 +248,76 @@ export function ExamSimulator({
                         <div className="text-sm text-muted-foreground mb-1">
                           Question {index + 1} - {q.categoryTitle}
                         </div>
-                        <div className="font-medium text-foreground mb-2">{q.question}</div>
+                        <div className="font-medium text-foreground mb-2">
+                          <ReactMarkdown
+                            components={{
+                              code: ({ className, children }) => (
+                                <CodeBlock className={className} inline={!className}>
+                                  {String(children).replace(/\n$/, '')}
+                                </CodeBlock>
+                              ),
+                              p: ({ children }) => <span>{children}</span>,
+                            }}
+                          >
+                            {q.question}
+                          </ReactMarkdown>
+                        </div>
                         {!isCorrect && (
                           <div className="text-sm space-y-1">
                             <div className="text-destructive">
-                              Votre réponse: {result?.userAnswers.join(', ') || 'Aucune'}
+                              <span>Votre réponse: </span>
+                              {result?.userAnswers.length ? result.userAnswers.map((ans, i) => (
+                                <span key={i}>
+                                  {i > 0 && ', '}
+                                  <ReactMarkdown
+                                    components={{
+                                      code: ({ className, children }) => (
+                                        <CodeBlock className={className} inline>
+                                          {String(children).replace(/\n$/, '')}
+                                        </CodeBlock>
+                                      ),
+                                      p: ({ children }) => <span>{children}</span>,
+                                    }}
+                                  >
+                                    {ans}
+                                  </ReactMarkdown>
+                                </span>
+                              )) : 'Aucune'}
                             </div>
                             <div className="text-accent">
-                              Réponse correcte: {q.correct_answers.join(', ')}
+                              <span>Réponse correcte: </span>
+                              {q.correct_answers.map((ans, i) => (
+                                <span key={i}>
+                                  {i > 0 && ', '}
+                                  <ReactMarkdown
+                                    components={{
+                                      code: ({ className, children }) => (
+                                        <CodeBlock className={className} inline>
+                                          {String(children).replace(/\n$/, '')}
+                                        </CodeBlock>
+                                      ),
+                                      p: ({ children }) => <span>{children}</span>,
+                                    }}
+                                  >
+                                    {ans}
+                                  </ReactMarkdown>
+                                </span>
+                              ))}
                             </div>
                             {q.explanation && (
                               <div className="text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
-                                {q.explanation}
+                                <ReactMarkdown
+                                  components={{
+                                    code: ({ className, children }) => (
+                                      <CodeBlock className={className} inline={!className}>
+                                        {String(children).replace(/\n$/, '')}
+                                      </CodeBlock>
+                                    ),
+                                    p: ({ children }) => <span>{children}</span>,
+                                  }}
+                                >
+                                  {q.explanation}
+                                </ReactMarkdown>
                               </div>
                             )}
                           </div>
@@ -346,7 +406,20 @@ export function ExamSimulator({
           <div className="text-sm text-muted-foreground mb-2">
             {currentQuestion.categoryTitle} • {currentQuestion.topicTitle}
           </div>
-          <h2 className="text-xl font-semibold text-foreground mb-6">{currentQuestion.question}</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-6">
+            <ReactMarkdown
+              components={{
+                code: ({ className, children }) => (
+                  <CodeBlock className={className} inline={!className}>
+                    {String(children).replace(/\n$/, '')}
+                  </CodeBlock>
+                ),
+                p: ({ children }) => <span>{children}</span>,
+              }}
+            >
+              {currentQuestion.question}
+            </ReactMarkdown>
+          </h2>
 
           <div className="space-y-3">
             {currentQuestion.options.map((option, index) => {
@@ -373,7 +446,20 @@ export function ExamSimulator({
                     >
                       {isSelected && <div className="w-2 h-2 bg-primary-foreground rounded-full" />}
                     </div>
-                    <span>{option}</span>
+                    <span className="flex-1">
+                      <ReactMarkdown
+                        components={{
+                          code: ({ className, children }) => (
+                            <CodeBlock className={className} inline>
+                              {String(children).replace(/\n$/, '')}
+                            </CodeBlock>
+                          ),
+                          p: ({ children }) => <span>{children}</span>,
+                        }}
+                      >
+                        {option}
+                      </ReactMarkdown>
+                    </span>
                   </div>
                 </button>
               );
